@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.email }}</h1>
+
+    <!-- Optionally show messages -->
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p><strong>Account info:</strong></p>
+    <ul>
+        <li>Email: {{ user.email }}</li>
+        <li>Active: {{ user.is_active }}</li>
+        <li>Staff: {{ user.is_staff }}</li>
+        <li>Superuser: {{ user.is_superuser }}</li>
+        <li>Created at: {{ user.created_at }}</li>
+    </ul>
+
+{#    <p><a href="{% url 'logout' %}">Logout</a></p>#}
+</body>
+</html>
