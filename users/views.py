@@ -13,7 +13,7 @@ def register(request):
         user = User.objects.create_user(email=email, password=password)
         messages.success(request, 'User created successfully!')
         return redirect('login')
-    return render(request, 'users/register.html')
+    return render(request, 'users/create_account.html')
 
 def login(request):
     if request.method == "POST":
@@ -29,10 +29,10 @@ def login(request):
             return redirect('profile')
         messages.error(request, "Invalid email or password.")
         return redirect("auth/login")
-    return render(request, 'users/login.html')
+    return render(request, 'users/sign_in.html')
 
 
 def profile(request):
-    return render(request, 'users/profile.html', {'user': request.user})
+    return render(request, 'users/forgot_password.html', {'user': request.user})
 
 
