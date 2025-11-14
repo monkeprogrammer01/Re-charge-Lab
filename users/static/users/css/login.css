@@ -1,0 +1,148 @@
+:root{
+  --bg:#f6f8fb;
+  --panel:#ffffff;
+  --ink:#0e1b2b;
+  --muted:#6b7a90;
+  --brand:#0f7ea8;
+  --border:#e6ecf2;
+  --shadow: 0 24px 48px rgba(16,24,40,.08);
+  --radius: 16px;
+}
+
+*,*::before,*::after{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0;
+  font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+}
+a{ color:var(--brand); text-decoration:none }
+a:hover{ text-decoration:underline }
+
+/* === Page layout === */
+.auth-page{
+  min-height:100svh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+}
+
+/* === Card === */
+.auth-card{
+  width:min(560px, 100%);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px 28px 32px;
+}
+
+/* —— Logo centered & tighter rhythm —— */
+.brand-row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-bottom:0;              /* было 6px → 0 */
+}
+.logo-t{
+  font-size:42px;
+  font-weight:800;
+  color:var(--brand);
+  line-height:1;
+  text-align:center;
+  margin-top:10px;              /* было 12px → 10px */
+  margin-bottom:0;              /* явно убираем нижний зазор */
+}
+
+.title{
+  font-size:28px;
+  font-weight:700;
+  margin:4px 0 2px;             /* было 6px сверху → 4px */
+  text-align:center;
+}
+.subtitle{
+  color:var(--muted);
+  margin-top:6px;               /* небольшой «дыхательный» зазор */
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.form{ display:grid; gap:16px }
+.field label{ display:block; font-size:13px; font-weight:600; margin:0 0 8px }
+.req{ color:#ef4444 }
+
+.input{
+  display:flex; align-items:center; gap:8px;
+  border:1px solid var(--border); border-radius:12px; background:#fff;
+  padding:12px 14px; transition:border-color .15s ease;
+}
+.input:focus-within{ border-color:var(--brand) }
+.input input{ flex:1; font:inherit; border:0; outline:0; min-width:0 }
+.eye{ cursor:pointer; line-height:0; opacity:.7; background:transparent; border:0; padding:0 }
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:14px 16px; border-radius:12px; border:0; cursor:pointer;
+  background:var(--brand); color:#fff; font-weight:600; box-shadow:0 6px 16px rgba(15,126,168,.25);
+}
+.btn:disabled{ background:#b8cad6; box-shadow:none; cursor:not-allowed }
+
+.helper-links{ display:flex; gap:16px; flex-wrap:wrap; margin-top:10px; justify-content:center }
+
+
+@media (max-width:560px){
+  .auth-card{ padding:18px 20px 28px }
+  .logo-t{ font-size:36px; margin-top:10px }
+  .title{ font-size:24px }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.choice-group{
+  display:flex; gap:12px; flex-wrap:wrap;
+}
+.choice{
+  position:relative;
+}
+.choice input{
+  position:absolute; inset:0; opacity:0; pointer-events:none;
+}
+.choice-tile{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 14px; border:1px solid var(--border);
+  border-radius:12px; background:#fff; cursor:pointer;
+  color:var(--ink); font-weight:600;
+  transition:box-shadow .15s ease, border-color .15s ease, transform .04s ease;
+}
+.choice-tile .icon{ line-height:0; color:#6b7a90 }
+.choice input:checked + .choice-tile{
+  border-color:var(--brand);
+  box-shadow:0 6px 16px rgba(15,126,168,.15);
+}
+.choice input:checked + .choice-tile .icon{ color:var(--brand) }
+.choice-tile:active{ transform:translateY(1px) }
+
+.error-msg{
+  display:none;
+  margin-top:6px;
+  font-size:12px;
+  color:#e53935;   /* red */
+}
+.error-msg.show{ display:block }

@@ -33,6 +33,8 @@ def login(request):
 
 
 def profile(request):
-    return render(request, 'users/forgot_password.html', {'user': request.user})
+    return render(request, 'users/forgot_pass.html', {'user': request.user})
 
 
+def forgot_password(request):
+    return render(request, 'users/forgot_pass.html')
