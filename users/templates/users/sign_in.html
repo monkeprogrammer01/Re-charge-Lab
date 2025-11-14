@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href={% static 'users/css/login.css' %} />
+  <link rel="stylesheet" href="{% static 'users/css/login.css' %}" />
 </head>
 <body>
   <main class="auth-page">
@@ -23,11 +23,12 @@
       <h2 class="title">Sign in</h2>
       <p class="subtitle">Welcome back!</p>
 
-      <form class="form">
+      <form class="form" method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
         <div class="field">
           <label>Email <span class="req">*</span></label>
           <div class="input">
-            <input type="text" name="login" placeholder="Enter your email" required />
+            <input type="text" name="email" placeholder="Enter your email" required />
           </div>
         </div>
 
