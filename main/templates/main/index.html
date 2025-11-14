@@ -1,35 +1,110 @@
-<!doctype html>
+{% load static %}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="login.css">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TechnoPulse — Main</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 </head>
 <body>
-<div class="loginbox">
-  <div class="login-header">
-    <header>Login</header>
-  </div>
-  <div class="input-box">
-    <input type="email" class="input-field" placeholder="Enter your email" autocomplete = "on"required>
-  </div>
-    <div class="input-box">
-    <input type="password" class="input-field" placeholder="Password" autocomplete = "off"required>
-  </div>
-  <div class="forgot">
-    <section>
-      <a href="#">Forgot password?</a>
+  <!-- ===== NAVBAR (fixed) ===== -->
+  <header class="tp-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <!-- Left: avatar (fallback to default if image not found) -->
+      <a class="nav-left" href="#" aria-label="Profile">
+        <img id="tp-avatar" class="avatar" alt="Profile"
+             src="http://www.w3.org/2000/svg"
+             onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;" />
+      </a>
+
+      <!-- Center: links -->
+      <nav class="nav-center" aria-label="Primary">
+        <a class="nav-link active" href="#dashboard">Dashboard</a>
+        <a class="nav-link" href="#challenges">Challenges</a>
+        <a class="nav-link" href="#tracker">Tracker</a>
+        <a class="nav-link" href="#rating">Rating</a>
+      </nav>
+
+      <!-- Right: auth actions -->
+      <div class="nav-actions">
+        <a class="btn btn-outline" href={% url 'login' %}>Sign in</a>
+        <a class="btn btn-primary" href={% url 'register' %}>Create account</a>
+      </div>
+
+      <!-- Mobile burger (toggles center links) -->
+      <button class="nav-burger" id="tp-burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== PAGE CONTENT (scrollable) ===== -->
+  <main class="tp-main">
+    <section id="dashboard" class="block">
+      <h2>Dashboard</h2>
+      <p class="muted">Add your widgets, charts, or announcements here.</p>
+      <div class="placeholder"></div>
     </section>
-  </div>
-  <div class="input-submit">
-    <button class="submit-btn" id="submit"></button>
-    <label for="submit">Sign in</label>
-  </div>
-  <div class="register">
-    <p>Don't have an account? <a href="#">Register</a></p>
-</div>
+
+    <section id="challenges" class="block">
+      <h2>Challenges</h2>
+      <p class="muted">List of current challenges will appear here.</p>
+      <div class="placeholder"></div>
+    </section>
+
+    <section id="tracker" class="block">
+      <h2>Tracker</h2>
+      <p class="muted">Tasks / time tracking / progress.</p>
+      <div class="placeholder"></div>
+    </section>
+
+    <section id="rating" class="block">
+      <h2>Rating</h2>
+      <p class="muted">Leaderboard or user ratings.</p>
+      <div class="placeholder"></div>
+    </section>
+  </main>
+
+  <script>
+    // Default avatar (inline SVG as data URI), used if assets/profile.jpg missing
+    window.TP_DEFAULT_AVATAR =
+      'data:image/svg+xml;utf8,' +
+      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#0f7ea8"/><stop offset="1" stop-color="#0b5f82"/>
+        </linearGradient></defs>
+        <rect width="160" height="160" rx="24" fill="url(#g)"/>
+        <circle cx="80" cy="62" r="28" fill="#fff" opacity="0.9"/>
+        <path d="M28 132c8-24 30-36 52-36s44 12 52 36" fill="#fff" opacity="0.9"/>
+      </svg>`);
+
+    // Burger toggle for small screens
+    const burger = document.getElementById('tp-burger');
+    const navCenter = document.querySelector('.nav-center');
+    burger.addEventListener('click', () => {
+      const open = navCenter.classList.toggle('open');
+      burger.setAttribute('aria-expanded', String(open));
+    });
+
+    // Smooth scroll + active state
+    document.querySelectorAll('.nav-center a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        const id = a.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if(el){ window.scrollTo({top: el.offsetTop - 72, behavior:'smooth'}); }
+        navCenter.classList.remove('open');
+        burger.setAttribute('aria-expanded','false');
+        document.querySelectorAll('.nav-center .nav-link').forEach(l=>l.classList.remove('active'));
+        a.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,31 +1,99 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register • TechnoPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href={% static 'users/css/login.css' %} />
 </head>
 <body>
-    <h1>Register</h1>
 
-    {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+  <main class="auth-page">
+    <section class="auth-card" aria-label="Register form">
+      <div class="brand-row"><h1 class="logo-t">TechnoPulse</h1></div>
 
-    <form method="POST">
-        {% csrf_token %}
-        <label>Email:</label>
-        <input type="email" name="email" required><br><br>
+      <h2 class="title">Create account</h2>
+      <p class="subtitle">It takes less than a minute.</p>
 
-        <label>Password:</label>
-        <input type="password" name="password" required><br><br>
+      <form class="form" id="registerForm" method="POST" action="{% url 'register' %}">
+          {% csrf_token %}
 
-        <button type="submit">Register</button>
-    </form>
+        <div class="field">
+          <label>Name <span class="req">*</span></label>
+          <div class="input"><input type="text" name="first_name" placeholder="Enter your name" required></div>
+        </div>
 
-{#    <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>#}
+        <div class="field">
+          <label>Surname <span class="req">*</span></label>
+          <div class="input"><input type="text" name="last_name" placeholder="Enter your surname" required></div>
+        </div>
+
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <div class="input"><input type="text" name="contact" placeholder="Enter your email" required></div>
+        </div>
+
+        <div class="field">
+          <label>Gender <span class="req">*</span></label>
+
+          <div class="choice-group">
+            <div class="choice">
+              <input type="radio" id="g-male" name="gender" value="male" required>
+              <label for="g-male" class="choice-tile" aria-label="Male">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                    <path d="M14 4h6v6M20 4l-7.5 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <circle cx="9" cy="15" r="5" stroke="currentColor" stroke-width="1.6"/>
+                  </svg>
+                </span>
+                <span>Male</span>
+              </label>
+            </div>
+
+            <div class="choice">
+              <input type="radio" id="g-female" name="gender" value="female" required>
+              <label for="g-female" class="choice-tile" aria-label="Female">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+                    <circle cx="12" cy="8" r="4.5" stroke="currentColor" stroke-width="1.6"/>
+                    <path d="M12 12.5V20M9 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <span>Female</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Password <span class="req">*</span></label>
+          <div class="input">
+            <input id="regPwd" type="password" name="password" placeholder="Create a password" minlength="6" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Confirm password <span class="req">*</span></label>
+          <div class="input">
+            <input id="regPwd2" type="password" name="confirm_password" placeholder="Repeat your password" required>
+          </div>
+          <div id="pwdErr" class="error-msg" role="alert">Passwords do not match.</div>
+        </div>
+
+        <button id="regSubmit" class="btn" type="submit">Create account</button>
+
+        <div class="helper-links">
+          <a href={% url 'login' %}>Sign in</a>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src={% static 'users/js/login.js' %}></script>
 </body>
 </html>
