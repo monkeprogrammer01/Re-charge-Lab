@@ -1,15 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('main.auth-page form');
-  const p1 = document.getElementById('regPwd');
-  const p2 = document.getElementById('regPwd2');
+  const pwd1 = document.getElementById('regPwd');
+  const pwd2 = document.getElementById('regPwd2');
   const err = document.getElementById('pwdErr');
+  const submitBtn = document.getElementById('regSubmit');
 
-  form.addEventListener('submit', e => {
-    if (p1.value !== p2.value) {
-      e.preventDefault(); // блокируем только если пароли не совпадают
-      err.classList.add('show');
+  const checkPasswords = () => {
+    if (pwd2.value === "" || pwd1.value === pwd2.value) {
+      err.classList.remove('show');
+      submitBtn.disabled = false;
+      pwd2.setCustomValidity('');
     } else {
-      err.classList.remove('show'); // всё ок — отправляем форму
+      err.classList.add('show');
+      submitBtn.disabled = true;
+      pwd2.setCustomValidity('Passwords do not match');
     }
+  };
+
+  pwd1.addEventListener('input', checkPasswords);
+  pwd2.addEventListener('input', checkPasswords);
+
+  form.addEventListener('submit', (e) => {
+    checkPasswords();
   });
 });
