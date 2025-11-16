@@ -1,3 +1,5 @@
 from django.db import models
+from users.views import User
 
-# Create your models here.
+# class Tracker(models.Model):
+#     user = models.ForeignKey(to=User)
