@@ -1,51 +1,9 @@
+{% extends 'main/base.html' %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TechnoPulse — Main</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
-</head>
-<body>
-  <!-- ===== NAVBAR (fixed) ===== -->
-  <header class="tp-nav" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <!-- Left: avatar (fallback to default if image not found) -->
-      <a class="nav-left" href="#" aria-label="Profile">
-        <img id="tp-avatar" class="avatar" alt="Profile"
-             src="http://www.w3.org/2000/svg"
-             onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;" />
-      </a>
-
-      <!-- Center: links -->
-      <nav class="nav-center" aria-label="Primary">
-        <a class="nav-link active" href="#dashboard">Dashboard</a>
-        <a class="nav-link" href="#challenges">Challenges</a>
-        <a class="nav-link" href="#tracker">Tracker</a>
-        <a class="nav-link" href="#rating">Rating</a>
-      </nav>
-
-      <!-- Right: auth actions -->
-      <div class="nav-actions">
-        <a class="btn btn-outline" href={% url 'login' %}>Sign in</a>
-        <a class="btn btn-primary" href={% url 'register' %}>Create account</a>
-      </div>
-
-      <!-- Mobile burger (toggles center links) -->
-      <button class="nav-burger" id="tp-burger" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ===== PAGE CONTENT (scrollable) ===== -->
-  <main class="tp-main">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+{% endblock %}
+{% block content %}
     <section id="dashboard" class="block">
       <h2>Dashboard</h2>
       <p class="muted">Add your widgets, charts, or announcements here.</p>
@@ -69,8 +27,8 @@
       <p class="muted">Leaderboard or user ratings.</p>
       <div class="placeholder"></div>
     </section>
-  </main>
-
+{% endblock %}
+{% block extra_js %}
   <script>
     // Default avatar (inline SVG as data URI), used if assets/profile.jpg missing
     window.TP_DEFAULT_AVATAR =
@@ -106,5 +64,4 @@
       });
     });
   </script>
-</body>
-</html>
+{% endblock %}
