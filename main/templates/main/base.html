@@ -28,10 +28,10 @@
     {% endif %}
       <!-- Center: links -->
       <nav class="nav-center" aria-label="Primary">
-        <a class="nav-link active" href="{% url 'main' %}">Dashboard</a>
-        <a class="nav-link" href="#challenges">Challenges</a>
-        <a class="nav-link" href="{% url 'tracker' %}">Tracker</a>
-        <a class="nav-link" href="#rating">Rating</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'main' %}active{% endif %}" href="{% url 'main' %}">Dashboard</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'challenges' %}active{% endif %}" href="#challenges">Challenges</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'tracker' %}active{% endif %}" href="{% url 'tracker' %}">Tracker</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'rating' %}active{% endif %}" href="#rating">Rating</a>
       </nav>
     {% if not user.is_authenticated %}
       <div class="nav-actions">
