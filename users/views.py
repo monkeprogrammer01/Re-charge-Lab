@@ -25,7 +25,6 @@ def login(request):
             auth_login(request, user)
             token = user.token
             messages.success(request, f"JWT Token: {token}")
-
             return redirect('profile')
         messages.error(request, "Invalid email or password.")
         return redirect("auth/login")
@@ -33,7 +32,7 @@ def login(request):
 
 
 def profile(request):
-    return render(request, 'users/profile.html', {'user': request.user})
+    return render(request, 'users/profile.html')
 
 
 def forgot_password(request):

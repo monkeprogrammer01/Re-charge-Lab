@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendar • TechnoPulse</title>
+
+  <style>
+    :root {
+      --bg: #f5f8fd;
+      --card: #ffffff;
+      --ink: #1f2933;
+      --muted: #6b7a90;
+
+      /* NEW BLUE */
+      --brand: #367AA0;
+      --brand-soft: rgba(54, 122, 160, 0.16);
+
+      --border: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo-tp {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--brand);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 15px;
+    }
+
+    .nav-link {
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .nav-link:hover {
+      background: rgba(54, 122, 160, 0.12);
+      color: var(--brand);
+    }
+
+    .nav-link-active {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-ghost,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--brand);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(54, 122, 160, 0.25);
+    }
+
+    main {
+      padding: 24px 40px 40px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 20px 24px 24px;
+    }
+
+    .month-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .month-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .month-nav-btn {
+      border-radius: 999px;
+      border: 0;
+      background: rgba(54, 122, 160, 0.12);
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--brand);
+    }
+
+    .weekday-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .day {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      border: 1.5px solid transparent;
+      background: #ffffff;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2933;
+      cursor: pointer;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .day:hover {
+      border-color: rgba(54, 122, 160, 0.26);
+      box-shadow: 0 0 0 2px rgba(54, 122, 160, 0.16);
+    }
+
+    .day-today {
+      background: #f4fff7;
+      border-color: #d4f5dd;
+    }
+
+    .day-selected {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 2px var(--brand-soft);
+    }
+
+    .side-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .side-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .tasks {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #f6f8fd;
+      font-size: 14px;
+    }
+
+    .task button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .add-row input {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .add-row button {
+      border-radius: 12px;
+      padding: 10px 16px;
+      border: 0;
+      background: var(--brand);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo-tp">TechnoPulse</div>
+    <nav class="nav-links">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link nav-link-active">Calendar</a>
+      <a href="#" class="nav-link">Challenges</a>
+      <a href="#" class="nav-link">Tracker</a>
+      <a href="#" class="nav-link">Rating</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <button class="btn-ghost">Sign in</button>
+    <button class="btn-primary">Create account</button>
+  </div>
+</header>
+
+<main>
+  <div class="layout">
+    <section class="card">
+
+      <div class="month-row">
+        <button class="month-nav-btn" id="prevMonth">‹</button>
+        <div class="month-title" id="monthLabel"></div>
+        <button class="month-nav-btn" id="nextMonth">›</button>
+      </div>
+
+      <div class="weekday-row">
+        <div class="weekday">Mon</div>
+        <div class="weekday">Tue</div>
+        <div class="weekday">Wed</div>
+        <div class="weekday">Thu</div>
+        <div class="weekday">Fri</div>
+        <div class="weekday">Sat</div>
+        <div class="weekday">Sun</div>
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid"></div>
+    </section>
+
+    <section class="card">
+      <div class="side-title" id="sideTitle"></div>
+      <div class="side-sub" id="sideSub"></div>
+
+      <ul class="tasks" id="tasksList"></ul>
+
+      <div class="add-row">
+        <input type="text" id="taskInput" placeholder="Add task…">
+        <button id="addTaskBtn">Add</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  /* Calendar core */
+  const calendarGrid = document.getElementById("calendarGrid");
+  const monthLabel = document.getElementById("monthLabel");
+  const sideTitle = document.getElementById("sideTitle");
+  const sideSub = document.getElementById("sideSub");
+
+  let current = new Date();
+  let selectedDate = new Date();
+
+  function formatISO(d) {
+    return d.toISOString().split("T")[0];
+  }
+
+  function pretty(d) {
+    return d.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    });
+  }
+
+  function renderCalendar(dateObj) {
+    calendarGrid.innerHTML = "";
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth();
+
+    monthLabel.textContent = dateObj.toLocaleString("en", {
+      month: "long",
+      year: "numeric"
+    });
+
+    const first = new Date(year, month, 1);
+    let start = first.getDay();
+    if (start === 0) start = 7;
+
+    for (let i = 1; i < start; i++) {
+      calendarGrid.appendChild(document.createElement("div"));
+    }
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayISO = formatISO(new Date());
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const btn = document.createElement("button");
+      btn.className = "day";
+      const iso = `${year}-${String(month + 1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      btn.dataset.date = iso;
+      btn.textContent = d;
+
+      if (iso === todayISO) btn.classList.add("day-today");
+      if (iso === formatISO(selectedDate)) btn.classList.add("day-selected");
+
+      btn.onclick = () => {
+        selectedDate = new Date(iso);
+        updateSide(selectedDate);
+        document.querySelector(".day-selected")?.classList.remove("day-selected");
+        btn.classList.add("day-selected");
+      };
+
+      calendarGrid.appendChild(btn);
+    }
+  }
+
+  function updateSide(date) {
+    sideTitle.textContent = pretty(date);
+    sideSub.textContent = formatISO(date);
+  }
+
+  prevMonth.onclick = () => {
+    current.setMonth(current.getMonth() - 1);
+    renderCalendar(current);
+  };
+
+  nextMonth.onclick = () => {
+    current.setMonth(current.getMonth() + 1);
+    renderCalendar(current);
+  };
+
+  /* Tasks */
+  const tasksList = document.getElementById("tasksList");
+  const taskInput = document.getElementById("taskInput");
+
+  addTaskBtn.onclick = () => {
+    const text = taskInput.value.trim();
+    if (!text) return;
+    const li = document.createElement("li");
+    li.className = "task";
+    li.innerHTML = `<span>${text}</span><button>&times;</button>`;
+    tasksList.appendChild(li);
+    taskInput.value = "";
+  };
+
+  tasksList.onclick = (e) => {
+    if (e.target.tagName === "BUTTON") {
+      e.target.closest(".task")?.remove();
+    }
+  };
+
+  /* init */
+  renderCalendar(current);
+  updateSide(selectedDate);
+</script>
+
+</body>
+</html>
