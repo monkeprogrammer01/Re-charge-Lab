@@ -7,10 +7,13 @@ def register(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        gender = request.POST.get('gender')
         if User.objects.filter(email=email).exists():
             messages.error(request, 'User with this email already exists.')
             return redirect('register')
-        user = User.objects.create_user(email=email, password=password)
+        user = User.objects.create_user(name=name, surname=surname, email=email, gender=gender, password=password)
         messages.success(request, 'User created successfully!')
         return redirect('login')
     return render(request, 'users/create_account.html')

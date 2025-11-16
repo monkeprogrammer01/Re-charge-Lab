@@ -21,7 +21,8 @@
     {% if user.is_authenticated %}
       <a class="nav-left" href="{% url 'profile' %}" aria-label="Profile">
         <img id="tp-avatar" class="avatar" alt="Profile"
-             src="http://www.w3.org/2000/svg"
+             src="{% static 'main/img/avatar-default.svg' %}"
+{#             http://www.w3.org/2000/svg#}
              onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;" />
       </a>
     {% endif %}
