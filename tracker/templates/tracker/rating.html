@@ -1,0 +1,136 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'tracker/css/rating.css' %}">
+{% endblock %}
+{% block content %}
+<main class="rating-layout">
+  <!-- Left: summary for current user -->
+  <section class="card">
+    <h2 class="rating-summary-title">Your rating summary</h2>
+    <div class="rating-summary-row">
+      <span>Position</span>
+      <span id="rating-position">#3</span>
+    </div>
+    <div class="rating-summary-row">
+      <span>Total points</span>
+      <span id="rating-points">120</span>
+    </div>
+    <div class="rating-summary-row">
+      <span>Completed challenges</span>
+      <span id="rating-completed">6</span>
+    </div>
+
+    <p class="rating-small-label">By difficulty (from Challenges)</p>
+    <div class="rating-summary-row">
+      <span>Easy (10 pts)</span>
+      <span id="rating-easy">3</span>
+    </div>
+    <div class="rating-summary-row">
+      <span>Medium (20 pts)</span>
+      <span id="rating-medium">2</span>
+    </div>
+    <div class="rating-summary-row">
+      <span>Hard (30 pts)</span>
+      <span id="rating-hard">1</span>
+    </div>
+
+    <p class="rating-small-label">How points are calculated</p>
+    <p style="font-size: 13px; color: var(--muted); margin: 0;">
+      The backend will read completed challenges from the <strong>Challenges</strong> page and sum their points:
+      Easy = 10, Medium = 20, Hard = 30. Every time you complete a challenge, your total points and position
+      on this page will be updated.
+    </p>
+  </section>
+
+  <!-- Right: leaderboard -->
+  <section class="card">
+    <h1 class="rating-main-title">Leaderboard</h1>
+    <p class="rating-main-sub">
+      This table shows all participants and their total points from completed challenges.
+      The example data below can later be replaced by real values from the backend.
+    </p>
+
+    <div class="rating-table-wrapper">
+      <table class="rating-table" id="ratingTable">
+        <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Total points</th>
+          <th>Completed</th>
+          <th>Easy (10)</th>
+          <th>Medium (20)</th>
+          <th>Hard (30)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- demo rows; backend will render real ones -->
+        <tr data-points="180">
+          <td>1</td>
+          <td>Aliya</td>
+          <td>180</td>
+          <td>8</td>
+          <td>4</td>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr data-points="150">
+          <td>2</td>
+          <td>Timur</td>
+          <td>150</td>
+          <td>7</td>
+          <td>3</td>
+          <td>2</td>
+          <td>2</td>
+        </tr>
+        <tr class="rating-row-you" data-points="120">
+          <td>3</td>
+          <td>
+            Aibar
+            <span class="rating-badge-you">you</span>
+          </td>
+          <td>120</td>
+          <td>6</td>
+          <td>3</td>
+          <td>2</td>
+          <td>1</td>
+        </tr>
+        <tr data-points="90">
+          <td>4</td>
+          <td>Diana</td>
+          <td>90</td>
+          <td>4</td>
+          <td>2</td>
+          <td>1</td>
+          <td>1</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- Shared auth modal -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-card">
+    <h3 class="auth-modal-title">Sign in required</h3>
+    <p class="auth-modal-text">
+      The Rating page is available only for signed-in users. Please sign in or create a new account.
+    </p>
+    <div class="auth-modal-actions">
+      <button type="button" class="btn-ghost" id="authCancelBtn">Maybe later</button>
+      <a href="sign_in.html" class="btn-primary auth-link-btn">Sign in</a>
+      <a href="create_account.html" class="btn-primary auth-link-btn">Create account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+<script>
+  /* Later backend will set it: true/false */
+  window.isLoggedIn = false;
+</script>
+<script src="{% static 'tracker/js/auth.js' %}"></script>
+<script src="{% static 'tracker/js/rating.js' %}"></script>
+

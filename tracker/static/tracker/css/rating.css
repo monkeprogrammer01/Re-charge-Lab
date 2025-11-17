@@ -29,11 +29,7 @@ a {
 /* NAVBAR */
 
 header {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  /*position: fixed;*/
-  width: 100%;
   display: flex;
-  z-index: 1000;
   align-items: center;
   justify-content: space-between;
   padding: 16px 40px;
@@ -67,13 +63,6 @@ header {
 .nav-link:hover {
   background: rgba(54, 122, 160, 0.12);
   color: var(--brand);
-}
-
-.nav-avatar{ display:flex; align-items:center }
-.avatar{
-  width:40px; height:40px; border-radius:50%;
-  border:2px solid #fff; box-shadow:0 3px 10px rgba(0,0,0,.08);
-  object-fit:cover; background:#e8eef5;
 }
 
 .nav-link-active {

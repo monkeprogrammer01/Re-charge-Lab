@@ -4,31 +4,146 @@
 <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 {% endblock %}
 {% block content %}
-    <section id="dashboard" class="block">
-      <h2>Dashboard</h2>
-      <p class="muted">Add your widgets, charts, or announcements here.</p>
-      <div class="placeholder"></div>
-    </section>
+<main class="home-layout">
+  <!-- Hero -->
+  <section class="card home-hero">
+    <p class="home-hero-pill">SDU TechnoPulse workspace</p>
+    <h1 class="home-hero-title">Plan challenges, schedule tasks and track progress in one place.</h1>
+    <p class="home-hero-sub">
+      TechnoPulse combines a challenge list, daily calendar, habit tracker and rating into a single workflow
+      for your team.
+    </p>
+    <ul class="home-hero-list">
+      <li>• Pick a challenge in <strong>Challenges</strong> and check its difficulty and points.</li>
+      <li>• Break it into concrete tasks in the <strong>Calendar</strong> for specific days.</li>
+      <li>• Build habits around study and training with the <strong>Tracker</strong>.</li>
+      <li>• Earn points and climb the <strong>Rating</strong> leaderboard together with your team.</li>
+    </ul>
+  </section>
 
-    <section id="challenges" class="block">
-      <h2>Challenges</h2>
-      <p class="muted">List of current challenges will appear here.</p>
-      <div class="placeholder"></div>
-    </section>
+  <!-- Detailed explanation: pages one under another -->
+  <section class="home-grid">
+    <article class="card">
+      <h2 class="home-feature-title">Calendar</h2>
+      <p class="home-feature-text">
+        Use the calendar to attach tasks to exact days. Each day has its own task list:
+        you can add items, mark them as done with a checkbox and delete them if needed.
+        Perfect for daily to-dos, assignment deadlines and reminders.
+      </p>
+      <div class="home-feature-tags">
+        <span class="home-feature-tag">Daily schedule</span>
+        <span class="home-feature-tag">Per-day task lists</span>
+        <span class="home-feature-tag">Checkbox completion</span>
+      </div>
+    </article>
 
-    <section id="tracker" class="block">
-      <h2>Tracker</h2>
-      <p class="muted">Tasks / time tracking / progress.</p>
-      <div class="placeholder"></div>
-    </section>
+    <article class="card">
+      <h2 class="home-feature-title">Challenges</h2>
+      <p class="home-feature-text">
+        Challenges are bigger goals: coding practice, study sprints or activity missions.
+        Every challenge has a difficulty level and a fixed amount of points:
+        <strong>Easy = 10 pts</strong>, <strong>Medium = 20 pts</strong>, <strong>Hard = 30 pts</strong>.
+        Status and progress can be updated as you work.
+      </p>
+      <div class="home-feature-tags">
+        <span class="home-feature-tag">Easy – 10 pts</span>
+        <span class="home-feature-tag">Medium – 20 pts</span>
+        <span class="home-feature-tag">Hard – 30 pts</span>
+        <span class="home-feature-tag">Status &amp; progress</span>
+      </div>
+    </article>
 
-    <section id="rating" class="block">
-      <h2>Rating</h2>
-      <p class="muted">Leaderboard or user ratings.</p>
-      <div class="placeholder"></div>
-    </section>
+    <article class="card">
+      <h2 class="home-feature-title">Tracker</h2>
+      <p class="home-feature-text">
+        The tracker is for daily habits: “solve 3 problems”, “read 20 pages”, “train 30 minutes”.
+        For each day you see how many habits you have, how many are completed,
+        and a small weekly overview that shows your consistency.
+      </p>
+      <div class="home-feature-tags">
+        <span class="home-feature-tag">Habits per day</span>
+        <span class="home-feature-tag">Completed vs total</span>
+        <span class="home-feature-tag">Weekly overview</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2 class="home-feature-title">Rating</h2>
+      <p class="home-feature-text">
+        The rating page aggregates points from completed challenges.
+        Each participant has total points, number of completed challenges,
+        and a breakdown by difficulty (how many Easy / Medium / Hard).
+        It is the main place to see who is leading right now.
+      </p>
+      <div class="home-feature-tags">
+        <span class="home-feature-tag">Leaderboard</span>
+        <span class="home-feature-tag">Total points</span>
+        <span class="home-feature-tag">Difficulty breakdown</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- How-to block -->
+  <section class="card">
+    <h2 class="home-howto-title">How your team can use TechnoPulse</h2>
+    <p class="home-howto-text">
+      1. At the start of the week, choose several challenges for the team in the <strong>Challenges</strong> page.
+    </p>
+    <p class="home-howto-text">
+      2. For each challenge, create small tasks in the <strong>Calendar</strong> and spread them across days.
+    </p>
+    <p class="home-howto-text">
+      3. Every day, mark personal habits in the <strong>Tracker</strong> to keep a healthy rhythm.
+    </p>
+    <p class="home-howto-text">
+      4. At the end of the week, open <strong>Rating</strong> to see who collected the most points from completed
+      challenges.
+    </p>
+  </section>
+</main>
+
+<!-- Sticky AI bar (always at the bottom like ChatGPT) -->
+<div class="home-ai-bar">
+  <div class="home-ai-bar-inner">
+    <div class="home-ai-bar-label">TechnoPulse assistant (available only for signed-in users)</div>
+    <div class="home-ai-input-row">
+      <button type="button" class="home-ai-plus-btn" id="aiPlusBtn">+</button>
+      <textarea
+        id="aiTextarea"
+        class="home-ai-textarea"
+        placeholder="Ask something about your challenges, calendar or rating…"
+      ></textarea>
+    </div>
+    <div class="home-ai-note">
+      When you sign in, this field will be connected to the AI assistant your teammate is building.
+    </div>
+  </div>
+</div>
+
+<!-- Shared auth modal for Rating + AI -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-card">
+    <h3 class="auth-modal-title">Sign in required</h3>
+    <p class="auth-modal-text">
+      The Rating page and AI assistant are available only for signed-in users.
+      Please sign in or create a new account.
+    </p>
+    <div class="auth-modal-actions">
+      <button type="button" class="btn-ghost" id="authCancelBtn">Maybe later</button>
+      <a href="sign_in.html" class="btn-primary auth-link-btn">Sign in</a>
+      <a href="create_account.html" class="btn-primary auth-link-btn">Create account</a>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
 {% block extra_js %}
+{#    <script>#}
+{#  /* Later the backend will set this value dynamically */#}
+{#  window.isLoggedIn = false;#}
+{#</script>#}
+{#<script src="{% static 'tracker/js/auth.js' %}"></script>#}
   <script>
     // Default avatar (inline SVG as data URI), used if assets/profile.jpg missing
     window.TP_DEFAULT_AVATAR =

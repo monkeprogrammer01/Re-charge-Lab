@@ -16,40 +16,36 @@
     {% block extra_css %} {% endblock %}
 </head>
 <body>
-  <!-- ===== NAVBAR (fixed) ===== -->
-  <header class="tp-nav" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <!-- Left: avatar (fallback to default if image not found) -->
-    {% if user.is_authenticated %}
-      <a class="nav-left" href="{% url 'profile' %}" aria-label="Profile">
+
+  <header>
+  <div class="header-left">
+    <a href="{% url 'main' %}" class="logo-tp">TechnoPulse</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a class="nav-link {% if request.resolver_match.url_name == 'main' %}nav-link-active{% endif %}" href="{% url 'main' %}">Dashboard</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'calendar' %}nav-link-active{% endif %}" href="{% url 'calendar' %}">Calendar</a>
+
+        <a class="nav-link {% if request.resolver_match.url_name == 'challenges' %}nav-link-active{% endif %}" href="{% url 'challenges' %}">Challenges</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'tracker' %}nav-link-active{% endif %}" href="{% url 'tracker' %}">Tracker</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'rating' %}nav-link-active{% endif %}" href="{% url 'rating' %}">Rating</a>
+      </nav>
+  </div>
+  <div class="header-right">
+      {% if not user.is_authenticated %}
+    <a href="{% url 'login' %}" class="btn-ghost">Sign in</a>
+    <a href="{% url 'register' %}" class="btn-primary">Create account</a>
+          {% else %}
+                <a class="nav-avatar" href="{% url 'profile' %}" aria-label="Profile">
         <img id="tp-avatar" class="avatar" alt="Profile"
-             src="{% static 'main/img/avatar-default.svg' %}"
+             src="{% static 'main/img/avatar-default.svg' %}" width="10%"
 {#             http://www.w3.org/2000/svg#}
              onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;" />
       </a>
-    {% endif %}
-      <!-- Center: links -->
-      <nav class="nav-center" aria-label="Primary">
-        <a class="nav-link {% if request.resolver_match.url_name == 'main' %}active{% endif %}" href="{% url 'main' %}">Dashboard</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'challenges' %}active{% endif %}" href="#challenges">Challenges</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'tracker' %}active{% endif %}" href="{% url 'tracker' %}">Tracker</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'rating' %}active{% endif %}" href="#rating">Rating</a>
-      </nav>
-    {% if not user.is_authenticated %}
-      <div class="nav-actions">
-        <a class="btn btn-outline" href={% url 'login' %}>Sign in</a>
-        <a class="btn btn-primary" href={% url 'register' %}>Create account</a>
-      </div>
-    {% endif %}
-      <!-- Mobile burger (toggles center links) -->
-      <button class="nav-burger" id="tp-burger" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-    <main class="tp-main">
-        {% block content %} {% endblock %}
-    </main>
+      {% endif %}
+  </div>
+</header>
+        {% block content %}
+
+        {% endblock %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>

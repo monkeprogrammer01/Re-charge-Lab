@@ -2,7 +2,9 @@
 
     {% block extra_css %}
     <style>
-
+        main {
+            display: flex;
+        }
         .container {
             width: 100%;
             max-width: 500px;
@@ -331,6 +333,7 @@
             margin-top: 10px;
         }
 
+
         /* Responsive */
         @media (max-width: 480px) {
             .container {
@@ -350,7 +353,7 @@
     {% endblock %}
 {% block content %}
 
-
+<main class="main-tp">
     <div class="container" >
 
         <div class="header">
@@ -577,6 +580,8 @@
             </div>
         </div>
     </div>
+</main>
+
 {% endblock %}
 {% block extra_js %}
     <script>
