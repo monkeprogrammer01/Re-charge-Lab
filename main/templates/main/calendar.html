@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calendar • TechnoPulse</title>
-
+{% extends "main/base.html" %}
+{% block extra_css %}
   <style>
     :root {
       --bg: #f5f8fd;
@@ -250,27 +245,10 @@
       }
     }
   </style>
-</head>
-<body>
 
-<header>
-  <div class="header-left">
-    <div class="logo-tp">TechnoPulse</div>
-    <nav class="nav-links">
-      <a href="#" class="nav-link">Home</a>
-      <a href="#" class="nav-link nav-link-active">Calendar</a>
-      <a href="#" class="nav-link">Challenges</a>
-      <a href="#" class="nav-link">Tracker</a>
-      <a href="#" class="nav-link">Rating</a>
-    </nav>
-  </div>
-  <div class="header-right">
-    <button class="btn-ghost">Sign in</button>
-    <button class="btn-primary">Create account</button>
-  </div>
-</header>
+{% endblock %}
 
-<main>
+{% block content %}
   <div class="layout">
     <section class="card">
 
@@ -305,8 +283,9 @@
       </div>
     </section>
   </div>
-</main>
+{% endblock %}
 
+{% block extra_js %}
 <script>
   /* Calendar core */
   const calendarGrid = document.getElementById("calendarGrid");
@@ -412,6 +391,4 @@
   renderCalendar(current);
   updateSide(selectedDate);
 </script>
-
-</body>
-</html>
+{% endblock %}

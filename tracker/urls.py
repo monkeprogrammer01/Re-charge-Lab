@@ -3,5 +3,4 @@ from tracker.views import tracker
 
 urlpatterns = [
     path("", tracker, name="tracker"),
-
 ]

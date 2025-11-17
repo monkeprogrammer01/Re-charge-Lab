@@ -349,19 +349,19 @@
     </style>
     {% endblock %}
 {% block content %}
+
+
     <div class="container" >
-        <!-- Header -->
 
         <div class="header">
             <div class="date" id="current-date">Понедельник, 15 декабря</div>
-            <div class="balance-score" id="balance-score">65%</div>
+            <div class="balance-score" id="balance-score">{{ total_points }}</div>
             <div class="progress-bar">
-                <div class="progress-fill" id="main-progress" style="width: 65%"></div>
+                <div class="progress-fill" id="main-progress" style="width: {{ total_points }}"></div>
             </div>
             <div class="balance-status" id="balance-status">🟡 Средний уровень баланса</div>
         </div>
 
-        <!-- Physical Health Section -->
         <div class="section physical">
             <div class="section-header">
                 <span class="icon">🍎</span>
@@ -372,18 +372,17 @@
             </div>
 
             <div class="tracker-grid">
-                <!-- Meals -->
                 <div class="tracker-item">
                     <div class="tracker-title">
                         <span class="emoji">🍽️</span>
                         ПИТАНИЕ
                     </div>
                     <div class="meals-container">
-                        <div class="meal eaten" data-meal="breakfast">
+                        <div class="meal" data-meal="breakfast">
                             <div>🍳</div>
                             <div class="meal-time">Завтрак</div>
                         </div>
-                        <div class="meal eaten" data-meal="lunch">
+                        <div class="meal" data-meal="lunch">
                             <div>🍲</div>
                             <div class="meal-time">Обед</div>
                         </div>
@@ -398,17 +397,20 @@
                 <div class="tracker-item">
                     <div class="tracker-title">
                         <span class="emoji">💧</span>
-                        ВОДА (4/8)
+                        ВОДА ({{ water }}/8)
                     </div>
                     <div class="water-container">
-                        <div class="glass filled">💧</div>
-                        <div class="glass filled">💧</div>
-                        <div class="glass filled">💧</div>
-                        <div class="glass filled">💧</div>
                         <div class="glass">💧</div>
                         <div class="glass">💧</div>
                         <div class="glass">💧</div>
                         <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+                        <div class="glass">💧</div>
+
                     </div>
                 </div>
 
@@ -579,38 +581,78 @@
 {% block extra_js %}
     <script>
         // Initialize current date
+        const csrftoken = document.querySelector('[name=csrf-token]').content;
+
         const now = new Date();
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+        function getMealsState() {
+            const meals = {};
 
+            document.querySelectorAll('.meal').forEach(meal => {
+                const name = meal.dataset.meal;
+                meals[name] = meal.classList.contains('eaten')
+            })
+            return meals;
+        }
         // Meal tracker
         document.querySelectorAll('.meal').forEach(meal => {
             meal.addEventListener('click', function() {
                 this.classList.toggle('eaten');
-                updateBalance();
+                const mealsState = getMealsState();
+
+                fetch("/tracker/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify({field: "meals", value: mealsState})
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        updateBalance(data.total_points)
+                    })
+                    .catch(err => console.error(err))
             });
         });
 
-        // Water tracker
-        document.querySelectorAll('.glass').forEach((glass, index) => {
-            glass.addEventListener('click', function() {
-                const glasses = document.querySelectorAll('.glass');
-                const currentIndex = Array.from(glasses).indexOf(this);
+document.querySelectorAll('.glass').forEach((glass, index) => {
+    glass.addEventListener('click', function() {
+        const glasses = document.querySelectorAll('.glass');
+        const currentIndex = Array.from(glasses).indexOf(this);
 
-                // Toggle all glasses up to clicked one
-                glasses.forEach((g, i) => {
-                    if (i <= currentIndex) {
-                        g.classList.add('filled');
-                    } else {
-                        g.classList.remove('filled');
-                    }
-                });
-
-                updateBalance();
-            });
+        // Обновляем классы
+        glasses.forEach((g, i) => {
+            if (i <= currentIndex) {
+                g.classList.add('filled');
+            } else {
+                g.classList.remove('filled');
+            }
         });
 
-        // Mood tracker
+        // Считаем заполненные после обновления
+        const filledCount = document.querySelectorAll('.glass.filled').length;
+
+        // Один POST-запрос
+        fetch("/tracker/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({field: "water", value: filledCount})
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateBalance(data.total_points);
+
+        })
+        .catch(err => console.error(err));
+    });
+});
+
+
         document.querySelectorAll('.mood-option').forEach(option => {
             option.addEventListener('click', function() {
                 document.querySelectorAll('.mood-option').forEach(opt => {
@@ -621,7 +663,6 @@
             });
         });
 
-        // Stimulants tracker
         document.querySelectorAll('.stimulant-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const buttons = this.parentElement.querySelectorAll('.stimulant-btn');
@@ -639,13 +680,14 @@
             });
         });
 
-        // Movement and relaxation functions
         function updateMovement(minutes) {
             const timeDisplay = document.getElementById('movement-time');
             let currentTime = parseInt(timeDisplay.textContent);
             currentTime = Math.max(0, currentTime + minutes);
             timeDisplay.textContent = currentTime + ' мин';
-            updateBalance();
+            const point = currentTime / 30
+
+            updateBalance(point);
         }
 
         function updateRelaxation(minutes) {
@@ -653,20 +695,20 @@
             let currentTime = parseInt(timeDisplay.textContent);
             currentTime = Math.max(0, currentTime + minutes);
             timeDisplay.textContent = currentTime + ' мин';
-            updateBalance();
+            const point = currentTime * 100 / 30
+            updateBalance(point);
         }
 
         function completeChallenge() {
             alert('🎉 Отлично! Челлендж выполнен!');
-            updateBalance();
+            updateBalance(20);
         }
 
         // Update overall balance (simplified)
-        function updateBalance() {
+        function updateBalance(earned) {
             // In real app, this would calculate based on all trackers
-            const randomChange = (Math.random() - 0.5) * 10;
             const currentBalance = parseInt(document.getElementById('balance-score').textContent);
-            const newBalance = Math.max(0, Math.min(100, currentBalance + randomChange));
+            const newBalance = Math.max(0, Math.min(100, currentBalance + earned));
 
             document.getElementById('balance-score').textContent = Math.round(newBalance) + '%';
             document.getElementById('main-progress').style.width = newBalance + '%';

@@ -1,6 +1,7 @@
 from django.db import models
 from users.views import User
 from django.utils import timezone
+
 class DailyBalance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
@@ -23,8 +24,15 @@ class DailyBalance(models.Model):
         default=list,
     )
 
+    total_points = models.PositiveIntegerField(default=0)
+
     class Meta:
         unique_together = ['user', 'date']
         ordering = ['-date']
     def __str__(self):
         return f"{self.user.email} - {self.date}"
+
+class Meal(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal_type = models.TextField()
+    is_eaten = models.BooleanField(default=False)

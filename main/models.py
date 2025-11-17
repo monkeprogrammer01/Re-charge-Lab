@@ -1,3 +1,7 @@
 from django.db import models
+from users.models import User
 
-# Create your models here.
+class Task(models.Model):
+    description = models.TextField()
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
