@@ -26,7 +26,10 @@ class DailyBalance(models.Model):
         meal_points = sum(10 for eaten in self.meals.values() if eaten)
         water_points = self.water
         movement_points = (self.movement_minutes / 30)* 20
-        self.total_points = round(meal_points + water_points + movement_points)
+        relaxation_minutes = (self.relaxation_minutes / 10) * 5
+        completed_challenge = 20 if self.completed_challenge else 0
+        social_points = len(self.social_connections) * 5
+        self.total_points = round(meal_points + water_points + movement_points + relaxation_minutes + completed_challenge + social_points)
         return self.total_points
 
     class Meta:

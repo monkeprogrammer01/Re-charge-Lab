@@ -1,361 +1,7 @@
 {% extends 'main/base.html' %}
-
+{% load static %}
 {% block extra_css %}
-    <style>
-        main {
-            display: flex;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        {#/* Header */#}
-        .header {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .date {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        .balance-score {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .progress-bar {
-            height: 12px;
-            background: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
-        .balance-status {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Tracker Sections */
-        .section {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .section-header .icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        .section-progress {
-            height: 6px;
-            background: #f0f0f0;
-            border-radius: 3px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-        .section-progress-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.3s ease;
-        }
-
-        /* Physical - Green */
-        .physical .section-progress-fill {
-            background: #4CAF50;
-        }
-
-        /* Emotional - Orange */
-        .emotional .section-progress-fill {
-            background: #FF9800;
-        }
-
-        /* Social - Blue */
-        .social .section-progress-fill {
-            background: #2196F3;
-        }
-
-        /* Trackers */
-        .tracker-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .tracker-item {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 15px;
-        }
-
-        .tracker-title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .tracker-title .emoji {
-            font-size: 20px;
-            margin-right: 8px;
-        }
-
-        /* Meals Tracker */
-        .meals-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .meal {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background: #e8f5e8;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .meal.eaten {
-            background: #4CAF50;
-            color: white;
-            border-color: #45a049;
-        }
-
-        .meal-time {
-            font-size: 12px;
-            margin-top: 5px;
-            opacity: 0.7;
-        }
-
-        /* Water Tracker */
-        .water-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-        }
-
-        .glass {
-            flex: 1;
-            text-align: center;
-            padding: 8px 5px;
-            background: #e3f2fd;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .glass.filled {
-            background: #2196F3;
-            color: white;
-            border-color: #1976D2;
-        }
-
-        /* Movement Tracker */
-        .movement-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .time-display {
-            font-size: 18px;
-            font-weight: bold;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .time-btn {
-            padding: 8px 12px;
-            background: #FF9800;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        /* Stimulants Tracker */
-        .stimulants-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .stimulant-item {
-            text-align: center;
-        }
-
-        .stimulant-buttons {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .stimulant-btn {
-            flex: 1;
-            padding: 5px;
-            background: #ffebee;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .stimulant-btn.active {
-            background: #f44336;
-            color: white;
-        }
-
-        /* Mood Tracker */
-        .mood-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-        }
-
-        .mood-option {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background: #fff3e0;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .mood-option.selected {
-            background: #FF9800;
-            color: white;
-            border-color: #F57C00;
-        }
-
-        /* Relaxation Tracker */
-        .relaxation-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Challenge Tracker */
-        .challenge-card {
-            background: #e8f5e8;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .challenge-text {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .challenge-btn {
-            padding: 8px 20px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* Social Tracker */
-        .social-checkboxes {
-            display: grid;
-            gap: 10px;
-        }
-
-        .social-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #e3f2fd;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        /* Progress Section */
-        .achievements {
-            display: grid;
-            gap: 10px;
-        }
-
-        .achievement {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .notifications {
-            text-align: center;
-            padding: 15px;
-            background: #e8f5e8;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-
-            .section {
-                padding: 15px;
-            }
-
-            .meals-container,
-            .water-container {
-                gap: 5px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'tracker/css/tracker.css' %}">
 {% endblock %}
 {% block content %}
 
@@ -434,36 +80,35 @@
                     </div>
 
                     <!-- Stimulants -->
-{#                    <div class="tracker-item">#}
-{#                        <div class="tracker-title">#}
-{#                            <span class="emoji">⚡</span>#}
-{#                            СТИМУЛЯТОРЫ#}
-{#                        </div>#}
-{#                        <div class="stimulants-grid">#}
-{#                            <div class="stimulant-item">#}
-{#                                <div>☕ Кофе</div>#}
-{#                                <div class="stimulant-buttons">#}
-{#                                    <button class="stimulant-btn active">1</button>#}
-{#                                    <button class="stimulant-btn">2</button>#}
-{#                                    <button class="stimulant-btn">3</button>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="stimulant-item">#}
-{#                                <div>🍩 Сладкое</div>#}
-{#                                <div class="stimulant-buttons">#}
-{#                                    <button class="stimulant-btn">1</button>#}
-{#                                    <button class="stimulant-btn">2</button>#}
-{#                                    <button class="stimulant-btn">3</button>#}
-{#                                    <button class="stimulant-btn">4</button>#}
-{#                                    <button class="stimulant-btn">5</button>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
+                    {#                    <div class="tracker-item">#}
+                    {#                        <div class="tracker-title">#}
+                    {#                            <span class="emoji">⚡</span>#}
+                    {#                            СТИМУЛЯТОРЫ#}
+                    {#                        </div>#}
+                    {#                        <div class="stimulants-grid">#}
+                    {#                            <div class="stimulant-item">#}
+                    {#                                <div>☕ Кофе</div>#}
+                    {#                                <div class="stimulant-buttons">#}
+                    {#                                    <button class="stimulant-btn active">1</button>#}
+                    {#                                    <button class="stimulant-btn">2</button>#}
+                    {#                                    <button class="stimulant-btn">3</button>#}
+                    {#                                </div>#}
+                    {#                            </div>#}
+                    {#                            <div class="stimulant-item">#}
+                    {#                                <div>🍩 Сладкое</div>#}
+                    {#                                <div class="stimulant-buttons">#}
+                    {#                                    <button class="stimulant-btn">1</button>#}
+                    {#                                    <button class="stimulant-btn">2</button>#}
+                    {#                                    <button class="stimulant-btn">3</button>#}
+                    {#                                    <button class="stimulant-btn">4</button>#}
+                    {#                                    <button class="stimulant-btn">5</button>#}
+                    {#                                </div>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
                 </div>
             </div>
 
-            <!-- Emotional Health Section -->
             <div class="section emotional">
                 <div class="section-header">
                     <span class="icon"><i class="fa-solid fa-heart"></i></span>
@@ -474,7 +119,6 @@
                 </div>
 
                 <div class="tracker-grid">
-                    <!-- Mood -->
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">😊</span>
@@ -496,20 +140,18 @@
                         </div>
                     </div>
 
-                    <!-- Relaxation -->
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🧘</span>
-                            РЕЛАКС (10/30 мин)
+                            РЕЛАКС ({{ relaxation_minutes }}/10 мин)
                         </div>
                         <div class="relaxation-controls">
                             <button class="time-btn" onclick="updateRelaxation(-5)">-5</button>
-                            <div class="time-display" id="relaxation-time">10 мин</div>
+                            <div class="time-display" id="relaxation-time">{{ relaxation_minutes }} мин</div>
                             <button class="time-btn" onclick="updateRelaxation(5)">+5</button>
                         </div>
                     </div>
 
-                    <!-- Daily Challenge -->
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🎯</span>
@@ -517,16 +159,19 @@
                         </div>
                         <div class="challenge-card">
                             <div class="challenge-text">"Сделай 5 глубоких вдохов"</div>
-                            <button class="challenge-btn" onclick="completeChallenge()">✅ ВЫПОЛНИЛ</button>
+                            <button class="challenge-btn" id="challengeButton"
+    {% if completed_challenge %}disabled{% endif %} onclick="completeChallenge()">
+    {% if completed_challenge %}Completed{% else %}Complete Challenge{% endif %}
+</button>
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Social Connections Section -->
             <div class="section social">
                 <div class="section-header">
-<span class="icon"><i class="fas fa-user-friends"></i></span> СОЦИАЛЬНЫЕ СВЯЗИ
+                    <span class="icon"><i class="fas fa-user-friends"></i></span> СОЦИАЛЬНЫЕ СВЯЗИ
                     СОЦИАЛЬНЫЕ СВЯЗИ
                 </div>
                 <div class="section-progress">
@@ -536,22 +181,21 @@
                 <div class="tracker-grid">
                     <div class="social-checkboxes">
                         <div class="social-checkbox">
-                            <input type="checkbox" id="social-chat">
+                            <input type="checkbox" id="social-chat" {% if 'social-chat' in social_connections %}checked{% endif %}>
                             <label for="social-chat">💬 Написал другу</label>
                         </div>
                         <div class="social-checkbox">
-                            <input type="checkbox" id="social-call">
+                            <input type="checkbox" id="social-call" {% if 'social-call' in social_connections %}checked{% endif %}>
                             <label for="social-call">📞 Позвонил близким</label>
                         </div>
                         <div class="social-checkbox">
-                            <input type="checkbox" id="social-colleague">
+                            <input type="checkbox" id="social-colleague" {% if 'social-colleague' in social_connections %}checked{% endif %}>
                             <label for="social-colleague">👥 Пообщался с коллегой</label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress & Notifications -->
             <div class="section">
                 <div class="section-header">
                     <span class="icon"><i class="fa-solid fa-chart-area"></i></span>
@@ -561,7 +205,7 @@
                 <div class="achievements">
                     <div class="achievement">
                         <span>💧</span>
-                        <span>Выпил 4 стакана воды</span>
+                        <span>Выпил {{ water }} стакана воды</span>
                     </div>
                     <div class="achievement">
                         <span>🍳</span>
@@ -569,7 +213,7 @@
                     </div>
                     <div class="achievement">
                         <span>🚶</span>
-                        <span>25 минут активности</span>
+                        <span>{{ movement_minutes }} минут активности</span>
                     </div>
                 </div>
 
@@ -583,163 +227,6 @@
 
 {% endblock %}
 {% block extra_js %}
-    <script>
-        // Initialize current date
-        const csrftoken = document.querySelector('[name=csrf-token]').content;
+    <script src="{% static 'tracker/js/tracker.js' %}"></script>
 
-        const now = new Date();
-        const options = {weekday: 'long', day: 'numeric', month: 'long'};
-        document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
-
-        function getMealsState() {
-            const meals = {};
-
-            document.querySelectorAll('.meal').forEach(meal => {
-                const name = meal.dataset.meal;
-                meals[name] = meal.classList.contains('eaten')
-            })
-            return meals;
-        }
-
-        // Meal tracker
-        document.querySelectorAll('.meal').forEach(meal => {
-            meal.addEventListener('click', function () {
-                this.classList.toggle('eaten');
-                const mealsState = getMealsState();
-
-                fetch("/tracker/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": csrftoken
-                    },
-                    body: JSON.stringify({field: "meals", value: mealsState})
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        updateBalance(data.total_points)
-                    })
-                    .catch(err => console.error(err))
-            });
-        });
-
-        document.querySelectorAll('.glass').forEach((glass, index) => {
-            glass.addEventListener('click', function () {
-                const glasses = document.querySelectorAll('.glass');
-                const currentIndex = Array.from(glasses).indexOf(this);
-
-                glasses.forEach((g, i) => {
-                    if (i <= currentIndex) {
-                        g.classList.add('filled');
-
-                    } else {
-                        g.classList.remove('filled');
-                    }
-                });
-
-                const filledCount = document.querySelectorAll('.glass.filled').length;
-                const waterTitle = document.querySelector('#tracker-water');
-                waterTitle.textContent = `💧 ВОДА (${filledCount}/10)`;
-                fetch("/tracker/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": csrftoken
-                    },
-                    body: JSON.stringify({field: "water", value: filledCount})
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        updateBalance(data.total_points);
-                    })
-                    .catch(err => console.error(err));
-            });
-        });
-
-
-        document.querySelectorAll('.mood-option').forEach(option => {
-            option.addEventListener('click', function () {
-                document.querySelectorAll('.mood-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-                updateBalance();
-            });
-        });
-
-        document.querySelectorAll('.stimulant-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const buttons = this.parentElement.querySelectorAll('.stimulant-btn');
-                const clickedIndex = Array.from(buttons).indexOf(this);
-
-                buttons.forEach((button, index) => {
-                    if (index <= clickedIndex) {
-                        button.classList.add('active');
-                    } else {
-                        button.classList.remove('active');
-                    }
-                });
-
-                updateBalance();
-            });
-        });
-
-    function updateMovement(minutes) {
-        const timeDisplay = document.getElementById('movement-time');
-        let currentTime = parseInt(timeDisplay.textContent);
-        currentTime = Math.max(0, currentTime + minutes);
-        timeDisplay.textContent = currentTime + ' мин';
-
-        fetch("/tracker/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            body: JSON.stringify({
-                field: "movement_minutes",
-                value: currentTime
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            updateBalance(total_points);
-        })
-        .catch(err => console.error(err));
-    }
-
-        function updateRelaxation(minutes) {
-            const timeDisplay = document.getElementById('relaxation-time');
-            let currentTime = parseInt(timeDisplay.textContent);
-            currentTime = Math.max(0, currentTime + minutes);
-            timeDisplay.textContent = currentTime + ' мин';
-            const point = currentTime * 100 / 30
-            updateBalance(point);
-        }
-
-        function completeChallenge() {
-            alert('🎉 Отлично! Челлендж выполнен!');
-            updateBalance(20);
-        }
-
-        function updateBalance(totalPoints) {
-            const newBalance = Math.max(0, Math.min(100, totalPoints));
-
-            document.getElementById('balance-score').textContent = newBalance + '%';
-            document.getElementById('main-progress').style.width = newBalance + '%';
-
-            const statusElement = document.getElementById('balance-status');
-            if (newBalance >= 70) {
-                statusElement.textContent = '🟢 Высокий уровень баланса';
-            } else if (newBalance >= 40) {
-                statusElement.textContent = '🟡 Средний уровень баланса';
-            } else {
-                statusElement.textContent = '🔴 Низкий уровень баланса';
-            }
-        }
-
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', updateBalance);
-        });
-    </script>
 {% endblock %}

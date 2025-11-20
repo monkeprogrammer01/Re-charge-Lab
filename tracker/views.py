@@ -44,8 +44,7 @@ def tracker(request):
             handler(daily, value)
             daily.calculate_points()
             daily.save()
-
-        return JsonResponse({"total_points": daily.total_points, "meals": daily.meals})
+        return JsonResponse({"total_points": daily.total_points, "meals": daily.meals, "social_connections": daily.social_connections})
 
     return render(request, "tracker/tracker.html")
 
