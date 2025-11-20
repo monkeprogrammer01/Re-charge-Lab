@@ -1,10 +1,11 @@
 {% extends 'main/base.html' %}
 
-    {% block extra_css %}
+{% block extra_css %}
     <style>
         main {
             display: flex;
         }
+
         .container {
             width: 100%;
             max-width: 500px;
@@ -17,7 +18,7 @@
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
@@ -59,7 +60,7 @@
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .section-header {
@@ -90,13 +91,19 @@
         }
 
         /* Physical - Green */
-        .physical .section-progress-fill { background: #4CAF50; }
+        .physical .section-progress-fill {
+            background: #4CAF50;
+        }
 
         /* Emotional - Orange */
-        .emotional .section-progress-fill { background: #FF9800; }
+        .emotional .section-progress-fill {
+            background: #FF9800;
+        }
 
         /* Social - Blue */
-        .social .section-progress-fill { background: #2196F3; }
+        .social .section-progress-fill {
+            background: #2196F3;
+        }
 
         /* Trackers */
         .tracker-grid {
@@ -324,7 +331,6 @@
             border-radius: 10px;
         }
 
-        /* Notifications */
         .notifications {
             text-align: center;
             padding: 15px;
@@ -350,237 +356,230 @@
             }
         }
     </style>
-    {% endblock %}
+{% endblock %}
 {% block content %}
 
-<main class="main-tp">
-    <div class="container" >
+    <main class="main-tp">
+        <div class="container">
 
-        <div class="header">
-            <div class="date" id="current-date">Понедельник, 15 декабря</div>
-            <div class="balance-score" id="balance-score">{{ total_points }}</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="main-progress" style="width: {{ total_points }}"></div>
-            </div>
-            <div class="balance-status" id="balance-status">🟡 Средний уровень баланса</div>
-        </div>
-
-        <div class="section physical">
-            <div class="section-header">
-                <span class="icon">🍎</span>
-                ФИЗИЧЕСКОЕ ЗДОРОВЬЕ
-            </div>
-            <div class="section-progress">
-                <div class="section-progress-fill" style="width: 80%"></div>
+            <div class="header">
+                <div class="date" id="current-date">Понедельник, 15 декабря</div>
+                <div class="balance-score" id="balance-score">{{ total_points }}%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="main-progress" style="width: {{ total_points }}%"></div>
+                </div>
+                <div class="balance-status" id="balance-status">🟡 Средний уровень баланса</div>
             </div>
 
-            <div class="tracker-grid">
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">🍽️</span>
-                        ПИТАНИЕ
-                    </div>
-                    <div class="meals-container">
-                        <div class="meal" data-meal="breakfast">
-                            <div>🍳</div>
-                            <div class="meal-time">Завтрак</div>
-                        </div>
-                        <div class="meal" data-meal="lunch">
-                            <div>🍲</div>
-                            <div class="meal-time">Обед</div>
-                        </div>
-                        <div class="meal" data-meal="dinner">
-                            <div>🍝</div>
-                            <div class="meal-time">Ужин</div>
-                        </div>
-                    </div>
+            <div class="section physical">
+                <div class="section-header">
+                    <span class="icon"><i class="fas fa-walking"></i></span> ФИЗИЧЕСКОЕ ЗДОРОВЬЕ
+
+                </div>
+                <div class="section-progress">
+                    <div class="section-progress-fill" style="width: {{ total_points }}%"></div>
                 </div>
 
-                <!-- Water -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">💧</span>
-                        ВОДА ({{ water }}/8)
-                    </div>
-                    <div class="water-container">
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-                        <div class="glass">💧</div>
-
-                    </div>
-                </div>
-
-                <!-- Movement -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">🚶</span>
-                        ДВИЖЕНИЕ
-                    </div>
-                    <div class="movement-controls">
-                        <button class="time-btn" onclick="updateMovement(-5)">-5</button>
-                        <div class="time-display" id="movement-time">25 мин</div>
-                        <button class="time-btn" onclick="updateMovement(5)">+5</button>
-                    </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="went-outside">
-                        <label for="went-outside">🚶 Вышел на улицу</label>
-                    </div>
-                </div>
-
-                <!-- Stimulants -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">⚡</span>
-                        СТИМУЛЯТОРЫ
-                    </div>
-                    <div class="stimulants-grid">
-                        <div class="stimulant-item">
-                            <div>☕ Кофе</div>
-                            <div class="stimulant-buttons">
-                                <button class="stimulant-btn active">1</button>
-                                <button class="stimulant-btn">2</button>
-                                <button class="stimulant-btn">3</button>
+                <div class="tracker-grid">
+                    <div class="tracker-item">
+                        <div class="tracker-title">
+                            <span class="emoji">🍽️</span>
+                            ПИТАНИЕ
+                        </div>
+                        <div class="meals-container">
+                            <div class="meal {% if meals.breakfast %}eaten{% endif %}" data-meal="breakfast">
+                                <div>🍳</div>
+                                <div class="meal-time">Завтрак</div>
                             </div>
-                        </div>
-                        <div class="stimulant-item">
-                            <div>🍩 Сладкое</div>
-                            <div class="stimulant-buttons">
-                                <button class="stimulant-btn">1</button>
-                                <button class="stimulant-btn">2</button>
-                                <button class="stimulant-btn">3</button>
-                                <button class="stimulant-btn">4</button>
-                                <button class="stimulant-btn">5</button>
+                            <div class="meal {% if meals.lunch %}eaten{% endif %}" data-meal="lunch">
+                                <div>🍲</div>
+                                <div class="meal-time">Обед</div>
+                            </div>
+                            <div class="meal {% if meals.dinner %}eaten{% endif %}" data-meal="dinner">
+                                <div>🍝</div>
+                                <div class="meal-time">Ужин</div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Emotional Health Section -->
-        <div class="section emotional">
-            <div class="section-header">
-                <span class="icon">💖</span>
-                ЭМОЦИОНАЛЬНОЕ СОСТОЯНИЕ
-            </div>
-            <div class="section-progress">
-                <div class="section-progress-fill" style="width: 50%"></div>
-            </div>
+                    <!-- Water -->
+                    <div class="tracker-item">
+                        <div class="tracker-title" id="tracker-water">
+                            <span class="emoji">💧</span>
+                            ВОДА ({{ water }}/10)
+                        </div>
+                        <div class="water-container">
+                            {% for i in water_range %}
+                                <div class="glass {% if i <= water %}filled{% endif %}">💧</div>
+                            {% endfor %}
 
-            <div class="tracker-grid">
-                <!-- Mood -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">😊</span>
-                        НАСТРОЕНИЕ
-                    </div>
-                    <div class="mood-container">
-                        <div class="mood-option selected" data-mood="3">
-                            <div>😊</div>
-                            <div>Хорошо</div>
-                        </div>
-                        <div class="mood-option" data-mood="2">
-                            <div>😐</div>
-                            <div>Нормально</div>
-                        </div>
-                        <div class="mood-option" data-mood="1">
-                            <div>😢</div>
-                            <div>Плохо</div>
                         </div>
                     </div>
+
+                    <!-- Movement -->
+                    <div class="tracker-item">
+                        <div class="tracker-title">
+                            <span class="emoji">🚶</span>
+                            ДВИЖЕНИЕ
+                        </div>
+                        <div class="movement-controls">
+                            <button class="time-btn" onclick="updateMovement(-5)">-5</button>
+                            <div class="time-display" id="movement-time">{{ movement_minutes }} мин</div>
+                            <button class="time-btn" onclick="updateMovement(5)">+5</button>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="went-outside">
+                            <label for="went-outside">🚶 Вышел на улицу</label>
+                        </div>
+                    </div>
+
+                    <!-- Stimulants -->
+{#                    <div class="tracker-item">#}
+{#                        <div class="tracker-title">#}
+{#                            <span class="emoji">⚡</span>#}
+{#                            СТИМУЛЯТОРЫ#}
+{#                        </div>#}
+{#                        <div class="stimulants-grid">#}
+{#                            <div class="stimulant-item">#}
+{#                                <div>☕ Кофе</div>#}
+{#                                <div class="stimulant-buttons">#}
+{#                                    <button class="stimulant-btn active">1</button>#}
+{#                                    <button class="stimulant-btn">2</button>#}
+{#                                    <button class="stimulant-btn">3</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="stimulant-item">#}
+{#                                <div>🍩 Сладкое</div>#}
+{#                                <div class="stimulant-buttons">#}
+{#                                    <button class="stimulant-btn">1</button>#}
+{#                                    <button class="stimulant-btn">2</button>#}
+{#                                    <button class="stimulant-btn">3</button>#}
+{#                                    <button class="stimulant-btn">4</button>#}
+{#                                    <button class="stimulant-btn">5</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+
+            <!-- Emotional Health Section -->
+            <div class="section emotional">
+                <div class="section-header">
+                    <span class="icon"><i class="fa-solid fa-heart"></i></span>
+                    ЭМОЦИОНАЛЬНОЕ СОСТОЯНИЕ
+                </div>
+                <div class="section-progress">
+                    <div class="section-progress-fill" style="width: 50%"></div>
                 </div>
 
-                <!-- Relaxation -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">🧘</span>
-                        РЕЛАКС (10/30 мин)
+                <div class="tracker-grid">
+                    <!-- Mood -->
+                    <div class="tracker-item">
+                        <div class="tracker-title">
+                            <span class="emoji">😊</span>
+                            НАСТРОЕНИЕ
+                        </div>
+                        <div class="mood-container">
+                            <div class="mood-option selected" data-mood="3">
+                                <div>😊</div>
+                                <div>Хорошо</div>
+                            </div>
+                            <div class="mood-option" data-mood="2">
+                                <div>😐</div>
+                                <div>Нормально</div>
+                            </div>
+                            <div class="mood-option" data-mood="1">
+                                <div>😢</div>
+                                <div>Плохо</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="relaxation-controls">
-                        <button class="time-btn" onclick="updateRelaxation(-5)">-5</button>
-                        <div class="time-display" id="relaxation-time">10 мин</div>
-                        <button class="time-btn" onclick="updateRelaxation(5)">+5</button>
+
+                    <!-- Relaxation -->
+                    <div class="tracker-item">
+                        <div class="tracker-title">
+                            <span class="emoji">🧘</span>
+                            РЕЛАКС (10/30 мин)
+                        </div>
+                        <div class="relaxation-controls">
+                            <button class="time-btn" onclick="updateRelaxation(-5)">-5</button>
+                            <div class="time-display" id="relaxation-time">10 мин</div>
+                            <button class="time-btn" onclick="updateRelaxation(5)">+5</button>
+                        </div>
+                    </div>
+
+                    <!-- Daily Challenge -->
+                    <div class="tracker-item">
+                        <div class="tracker-title">
+                            <span class="emoji">🎯</span>
+                            ЧЕЛЛЕНДЖ ДНЯ
+                        </div>
+                        <div class="challenge-card">
+                            <div class="challenge-text">"Сделай 5 глубоких вдохов"</div>
+                            <button class="challenge-btn" onclick="completeChallenge()">✅ ВЫПОЛНИЛ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Connections Section -->
+            <div class="section social">
+                <div class="section-header">
+<span class="icon"><i class="fas fa-user-friends"></i></span> СОЦИАЛЬНЫЕ СВЯЗИ
+                    СОЦИАЛЬНЫЕ СВЯЗИ
+                </div>
+                <div class="section-progress">
+                    <div class="section-progress-fill" style="width: 20%"></div>
+                </div>
+
+                <div class="tracker-grid">
+                    <div class="social-checkboxes">
+                        <div class="social-checkbox">
+                            <input type="checkbox" id="social-chat">
+                            <label for="social-chat">💬 Написал другу</label>
+                        </div>
+                        <div class="social-checkbox">
+                            <input type="checkbox" id="social-call">
+                            <label for="social-call">📞 Позвонил близким</label>
+                        </div>
+                        <div class="social-checkbox">
+                            <input type="checkbox" id="social-colleague">
+                            <label for="social-colleague">👥 Пообщался с коллегой</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress & Notifications -->
+            <div class="section">
+                <div class="section-header">
+                    <span class="icon"><i class="fa-solid fa-chart-area"></i></span>
+                    ПРОГРЕСС ДНЯ
+                </div>
+
+                <div class="achievements">
+                    <div class="achievement">
+                        <span>💧</span>
+                        <span>Выпил 4 стакана воды</span>
+                    </div>
+                    <div class="achievement">
+                        <span>🍳</span>
+                        <span>Позавтракал и пообедал</span>
+                    </div>
+                    <div class="achievement">
+                        <span>🚶</span>
+                        <span>25 минут активности</span>
                     </div>
                 </div>
 
-                <!-- Daily Challenge -->
-                <div class="tracker-item">
-                    <div class="tracker-title">
-                        <span class="emoji">🎯</span>
-                        ЧЕЛЛЕНДЖ ДНЯ
-                    </div>
-                    <div class="challenge-card">
-                        <div class="challenge-text">"Сделай 5 глубоких вдохов"</div>
-                        <button class="challenge-btn" onclick="completeChallenge()">✅ ВЫПОЛНИЛ</button>
-                    </div>
+                <div class="notifications">
+                    <div>🔔 TELEGRAM: ✅ Привязан</div>
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Получаешь умные напоминания</div>
                 </div>
             </div>
         </div>
-
-        <!-- Social Connections Section -->
-        <div class="section social">
-            <div class="section-header">
-                <span class="icon">👥</span>
-                СОЦИАЛЬНЫЕ СВЯЗИ
-            </div>
-            <div class="section-progress">
-                <div class="section-progress-fill" style="width: 20%"></div>
-            </div>
-
-            <div class="tracker-grid">
-                <div class="social-checkboxes">
-                    <div class="social-checkbox">
-                        <input type="checkbox" id="social-chat">
-                        <label for="social-chat">💬 Написал другу</label>
-                    </div>
-                    <div class="social-checkbox">
-                        <input type="checkbox" id="social-call">
-                        <label for="social-call">📞 Позвонил близким</label>
-                    </div>
-                    <div class="social-checkbox">
-                        <input type="checkbox" id="social-colleague">
-                        <label for="social-colleague">👥 Пообщался с коллегой</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Progress & Notifications -->
-        <div class="section">
-            <div class="section-header">
-                <span class="icon">📊</span>
-                ПРОГРЕСС ДНЯ
-            </div>
-
-            <div class="achievements">
-                <div class="achievement">
-                    <span>💧</span>
-                    <span>Выпил 4 стакана воды</span>
-                </div>
-                <div class="achievement">
-                    <span>🍳</span>
-                    <span>Позавтракал и пообедал</span>
-                </div>
-                <div class="achievement">
-                    <span>🚶</span>
-                    <span>25 минут активности</span>
-                </div>
-            </div>
-
-            <div class="notifications">
-                <div>🔔 TELEGRAM: ✅ Привязан</div>
-                <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Получаешь умные напоминания</div>
-            </div>
-        </div>
-    </div>
-</main>
+    </main>
 
 {% endblock %}
 {% block extra_js %}
@@ -589,8 +588,9 @@
         const csrftoken = document.querySelector('[name=csrf-token]').content;
 
         const now = new Date();
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        const options = {weekday: 'long', day: 'numeric', month: 'long'};
         document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+
         function getMealsState() {
             const meals = {};
 
@@ -600,9 +600,10 @@
             })
             return meals;
         }
+
         // Meal tracker
         document.querySelectorAll('.meal').forEach(meal => {
-            meal.addEventListener('click', function() {
+            meal.addEventListener('click', function () {
                 this.classList.toggle('eaten');
                 const mealsState = getMealsState();
 
@@ -622,44 +623,42 @@
             });
         });
 
-document.querySelectorAll('.glass').forEach((glass, index) => {
-    glass.addEventListener('click', function() {
-        const glasses = document.querySelectorAll('.glass');
-        const currentIndex = Array.from(glasses).indexOf(this);
+        document.querySelectorAll('.glass').forEach((glass, index) => {
+            glass.addEventListener('click', function () {
+                const glasses = document.querySelectorAll('.glass');
+                const currentIndex = Array.from(glasses).indexOf(this);
 
-        // Обновляем классы
-        glasses.forEach((g, i) => {
-            if (i <= currentIndex) {
-                g.classList.add('filled');
-            } else {
-                g.classList.remove('filled');
-            }
+                glasses.forEach((g, i) => {
+                    if (i <= currentIndex) {
+                        g.classList.add('filled');
+
+                    } else {
+                        g.classList.remove('filled');
+                    }
+                });
+
+                const filledCount = document.querySelectorAll('.glass.filled').length;
+                const waterTitle = document.querySelector('#tracker-water');
+                waterTitle.textContent = `💧 ВОДА (${filledCount}/10)`;
+                fetch("/tracker/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify({field: "water", value: filledCount})
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        updateBalance(data.total_points);
+                    })
+                    .catch(err => console.error(err));
+            });
         });
-
-        // Считаем заполненные после обновления
-        const filledCount = document.querySelectorAll('.glass.filled').length;
-
-        // Один POST-запрос
-        fetch("/tracker/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            },
-            body: JSON.stringify({field: "water", value: filledCount})
-        })
-        .then(response => response.json())
-        .then(data => {
-            updateBalance(data.total_points);
-
-        })
-        .catch(err => console.error(err));
-    });
-});
 
 
         document.querySelectorAll('.mood-option').forEach(option => {
-            option.addEventListener('click', function() {
+            option.addEventListener('click', function () {
                 document.querySelectorAll('.mood-option').forEach(opt => {
                     opt.classList.remove('selected');
                 });
@@ -669,7 +668,7 @@ document.querySelectorAll('.glass').forEach((glass, index) => {
         });
 
         document.querySelectorAll('.stimulant-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const buttons = this.parentElement.querySelectorAll('.stimulant-btn');
                 const clickedIndex = Array.from(buttons).indexOf(this);
 
@@ -685,15 +684,29 @@ document.querySelectorAll('.glass').forEach((glass, index) => {
             });
         });
 
-        function updateMovement(minutes) {
-            const timeDisplay = document.getElementById('movement-time');
-            let currentTime = parseInt(timeDisplay.textContent);
-            currentTime = Math.max(0, currentTime + minutes);
-            timeDisplay.textContent = currentTime + ' мин';
-            const point = currentTime / 30
+    function updateMovement(minutes) {
+        const timeDisplay = document.getElementById('movement-time');
+        let currentTime = parseInt(timeDisplay.textContent);
+        currentTime = Math.max(0, currentTime + minutes);
+        timeDisplay.textContent = currentTime + ' мин';
 
-            updateBalance(point);
-        }
+        fetch("/tracker/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken
+            },
+            body: JSON.stringify({
+                field: "movement_minutes",
+                value: currentTime
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateBalance(total_points);
+        })
+        .catch(err => console.error(err));
+    }
 
         function updateRelaxation(minutes) {
             const timeDisplay = document.getElementById('relaxation-time');
@@ -709,16 +722,12 @@ document.querySelectorAll('.glass').forEach((glass, index) => {
             updateBalance(20);
         }
 
-        // Update overall balance (simplified)
-        function updateBalance(earned) {
-            // In real app, this would calculate based on all trackers
-            const currentBalance = parseInt(document.getElementById('balance-score').textContent);
-            const newBalance = Math.max(0, Math.min(100, currentBalance + earned));
+        function updateBalance(totalPoints) {
+            const newBalance = Math.max(0, Math.min(100, totalPoints));
 
-            document.getElementById('balance-score').textContent = Math.round(newBalance) + '%';
+            document.getElementById('balance-score').textContent = newBalance + '%';
             document.getElementById('main-progress').style.width = newBalance + '%';
 
-            // Update status
             const statusElement = document.getElementById('balance-status');
             if (newBalance >= 70) {
                 statusElement.textContent = '🟢 Высокий уровень баланса';
@@ -729,7 +738,6 @@ document.querySelectorAll('.glass').forEach((glass, index) => {
             }
         }
 
-        // Social checkboxes
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', updateBalance);
         });

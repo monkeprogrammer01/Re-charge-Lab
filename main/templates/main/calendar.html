@@ -1,394 +1,477 @@
 {% extends "main/base.html" %}
 {% block extra_css %}
-  <style>
-    :root {
-      --bg: #f5f8fd;
-      --card: #ffffff;
-      --ink: #1f2933;
-      --muted: #6b7a90;
+    <style>
+        :root {
+            --bg: #f5f8fd;
+            --card: #ffffff;
+            --ink: #1f2933;
+            --muted: #6b7a90;
 
-      /* NEW BLUE */
-      --brand: #367AA0;
-      --brand-soft: rgba(54, 122, 160, 0.16);
+            /* NEW BLUE */
+            --brand: #367AA0;
+            --brand-soft: rgba(54, 122, 160, 0.16);
 
-      --border: #e2e8f0;
-    }
+            --border: #e2e8f0;
+        }
 
-    * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-    }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
 
-    a { text-decoration: none; color: inherit; }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 40px;
-    }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+        }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
 
-    .logo-tp {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      color: var(--brand);
-    }
+        .logo-tp {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            color: var(--brand);
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      font-size: 15px;
-    }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            font-size: 15px;
+        }
 
-    .nav-link {
-      padding: 8px 14px;
-      border-radius: 999px;
-      color: var(--muted);
-    }
+        .nav-link {
+            padding: 8px 14px;
+            border-radius: 999px;
+            color: var(--muted);
+        }
 
-    .nav-link:hover {
-      background: rgba(54, 122, 160, 0.12);
-      color: var(--brand);
-    }
+        .nav-link:hover {
+            background: rgba(54, 122, 160, 0.12);
+            color: var(--brand);
+        }
 
-    .nav-link-active {
-      background: var(--brand);
-      color: #fff;
-    }
+        .nav-link-active {
+            background: var(--brand);
+            color: #fff;
+        }
 
-    .header-right {
-      display: flex;
-      gap: 12px;
-    }
+        .header-right {
+            display: flex;
+            gap: 12px;
+        }
 
-    .btn-ghost,
-    .btn-primary {
-      border-radius: 999px;
-      padding: 8px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 0;
-      cursor: pointer;
-    }
+        .btn-ghost,
+        .btn-primary {
+            border-radius: 999px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 0;
+            cursor: pointer;
+        }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--brand);
-    }
+        .btn-ghost {
+            background: transparent;
+            color: var(--brand);
+        }
 
-    .btn-primary {
-      background: var(--brand);
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(54, 122, 160, 0.25);
-    }
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(54, 122, 160, 0.25);
+        }
 
-    main {
-      padding: 24px 40px 40px;
-    }
+        main {
+            padding: 24px 40px 40px;
+        }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 2.2fr 1fr;
-      gap: 24px;
-    }
+        .layout {
+            display: grid;
+            grid-template-columns: 2.2fr 1fr;
+            gap: 24px;
+        }
 
-    .card {
-      background: var(--card);
-      border-radius: 24px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-      padding: 20px 24px 24px;
-    }
+        .card {
+            background: var(--card);
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            padding: 20px 24px 24px;
+        }
 
-    .month-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+        .month-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
 
-    .month-title {
-      font-size: 20px;
-      font-weight: 600;
-    }
+        .month-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
 
-    .month-nav-btn {
-      border-radius: 999px;
-      border: 0;
-      background: rgba(54, 122, 160, 0.12);
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 16px;
-      color: var(--brand);
-    }
+        .month-nav-btn {
+            border-radius: 999px;
+            border: 0;
+            background: rgba(54, 122, 160, 0.12);
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--brand);
+        }
 
-    .weekday-row {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-      margin-bottom: 10px;
-      font-size: 12px;
-      color: var(--muted);
-    }
+        .weekday-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--muted);
+        }
 
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-    }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
 
-    .day {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      border-radius: 18px;
-      border: 1.5px solid transparent;
-      background: #ffffff;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #1f2933;
-      cursor: pointer;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
+        .day {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 18px;
+            border: 1.5px solid transparent;
+            background: #ffffff;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2933;
+            cursor: pointer;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
 
-    .day:hover {
-      border-color: rgba(54, 122, 160, 0.26);
-      box-shadow: 0 0 0 2px rgba(54, 122, 160, 0.16);
-    }
+        .day:hover {
+            border-color: rgba(54, 122, 160, 0.26);
+            box-shadow: 0 0 0 2px rgba(54, 122, 160, 0.16);
+        }
 
-    .day-today {
-      background: #f4fff7;
-      border-color: #d4f5dd;
-    }
+        .day-today {
+            background: #f4fff7;
+            border-color: #d4f5dd;
+        }
 
-    .day-selected {
-      border-color: var(--brand);
-      box-shadow: 0 0 0 2px var(--brand-soft);
-    }
+        .day-selected {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 2px var(--brand-soft);
+        }
 
-    .side-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
+        .side-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
 
-    .side-sub {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
+        .side-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
 
-    .tasks {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 16px;
-    }
+        .tasks {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 16px;
+        }
 
-    .task {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 10px;
-      border-radius: 12px;
-      background: #f6f8fd;
-      font-size: 14px;
-    }
+        .task {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: #f6f8fd;
+            font-size: 14px;
+        }
 
-    .task button {
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-      font-size: 14px;
-    }
+        .task button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
-    .add-row {
-      display: flex;
-      gap: 8px;
-    }
+        .add-row {
+            display: flex;
+            gap: 8px;
+        }
 
-    .add-row input {
-      flex: 1;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      font-size: 14px;
-    }
+        .add-row input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+        }
 
-    .add-row button {
-      border-radius: 12px;
-      padding: 10px 16px;
-      border: 0;
-      background: var(--brand);
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+        .add-row button {
+            border-radius: 12px;
+            padding: 10px 16px;
+            border: 0;
+            background: var(--brand);
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-    @media (max-width: 900px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 
 {% endblock %}
 
 {% block content %}
-  <div class="layout">
-    <section class="card">
+    <main>
+        <div class="layout">
+            <section class="card">
 
-      <div class="month-row">
-        <button class="month-nav-btn" id="prevMonth">‹</button>
-        <div class="month-title" id="monthLabel"></div>
-        <button class="month-nav-btn" id="nextMonth">›</button>
-      </div>
+                <div class="month-row">
+                    <button class="month-nav-btn" id="prevMonth">‹</button>
+                    <div class="month-title" id="monthLabel"></div>
+                    <button class="month-nav-btn" id="nextMonth">›</button>
+                </div>
 
-      <div class="weekday-row">
-        <div class="weekday">Mon</div>
-        <div class="weekday">Tue</div>
-        <div class="weekday">Wed</div>
-        <div class="weekday">Thu</div>
-        <div class="weekday">Fri</div>
-        <div class="weekday">Sat</div>
-        <div class="weekday">Sun</div>
-      </div>
+                <div class="weekday-row">
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                    <div class="weekday">Sun</div>
+                </div>
 
-      <div class="calendar-grid" id="calendarGrid"></div>
-    </section>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </section>
 
-    <section class="card">
-      <div class="side-title" id="sideTitle"></div>
-      <div class="side-sub" id="sideSub"></div>
+            <section class="card">
+                <div class="side-title" id="sideTitle"></div>
+                <div class="side-sub" id="sideSub"></div>
 
-      <ul class="tasks" id="tasksList"></ul>
+                <ul class="tasks" id="tasksList"></ul>
 
-      <div class="add-row">
-        <input type="text" id="taskInput" placeholder="Add task…">
-        <button id="addTaskBtn">Add</button>
-      </div>
-    </section>
-  </div>
+                <div class="add-row">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+                    <input type="text" id="taskInput" placeholder="Add task…">
+
+                    <button type="button" id="addTaskBtn">Add</button>
+                </div>
+
+            </section>
+        </div>
+        <div id="taskModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h3>Add Task</h3>
+                <input type="text" id="modalTaskDesc" placeholder="Task description">
+                <label for="modalDueDate">Due date:</label>
+                <input type="date" id="modalDueDate">
+                <div class="modal-buttons">
+                    <button id="modalCancel">Cancel</button>
+                    <button id="modalSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  /* Calendar core */
-  const calendarGrid = document.getElementById("calendarGrid");
-  const monthLabel = document.getElementById("monthLabel");
-  const sideTitle = document.getElementById("sideTitle");
-  const sideSub = document.getElementById("sideSub");
+    <script>
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
-  let current = new Date();
-  let selectedDate = new Date();
+        const calendarGrid = document.getElementById("calendarGrid");
+        const monthLabel = document.getElementById("monthLabel");
+        const sideTitle = document.getElementById("sideTitle");
+        const sideSub = document.getElementById("sideSub");
 
-  function formatISO(d) {
-    return d.toISOString().split("T")[0];
-  }
+        let current = new Date();
+        let selectedDate = new Date();
 
-  function pretty(d) {
-    return d.toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric"
-    });
-  }
+        function formatISO(d) {
+            return d.toISOString().split("T")[0];
+        }
 
-  function renderCalendar(dateObj) {
-    calendarGrid.innerHTML = "";
+        function pretty(d) {
+            return d.toLocaleDateString("en-US", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            });
+        }
 
-    const year = dateObj.getFullYear();
-    const month = dateObj.getMonth();
 
-    monthLabel.textContent = dateObj.toLocaleString("en", {
-      month: "long",
-      year: "numeric"
-    });
 
-    const first = new Date(year, month, 1);
-    let start = first.getDay();
-    if (start === 0) start = 7;
+        function renderCalendar(dateObj) {
+            calendarGrid.innerHTML = "";
 
-    for (let i = 1; i < start; i++) {
-      calendarGrid.appendChild(document.createElement("div"));
-    }
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth();
 
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const todayISO = formatISO(new Date());
+            monthLabel.textContent = dateObj.toLocaleString("en", {
+                month: "long",
+                year: "numeric"
+            });
 
-    for (let d = 1; d <= daysInMonth; d++) {
-      const btn = document.createElement("button");
-      btn.className = "day";
-      const iso = `${year}-${String(month + 1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-      btn.dataset.date = iso;
-      btn.textContent = d;
+            const first = new Date(year, month, 1);
+            let start = first.getDay();
+            if (start === 0) start = 7;
 
-      if (iso === todayISO) btn.classList.add("day-today");
-      if (iso === formatISO(selectedDate)) btn.classList.add("day-selected");
+            for (let i = 1; i < start; i++) {
+                calendarGrid.appendChild(document.createElement("div"));
+            }
 
-      btn.onclick = () => {
-        selectedDate = new Date(iso);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const todayISO = formatISO(new Date());
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const btn = document.createElement("button");
+                btn.className = "day";
+                const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                btn.dataset.date = iso;
+                btn.textContent = d;
+
+                if (iso === todayISO) btn.classList.add("day-today");
+                if (iso === formatISO(selectedDate)) btn.classList.add("day-selected");
+
+                btn.onclick = () => {
+                    selectedDate = new Date(iso);
+                    updateSide(selectedDate);
+                    document.querySelector(".day-selected")?.classList.remove("day-selected");
+                    btn.classList.add("day-selected");
+                };
+
+                calendarGrid.appendChild(btn);
+            }
+        }
+
+        function updateSide(date) {
+            sideTitle.textContent = pretty(date);
+            sideSub.textContent = formatISO(date);
+        }
+
+        async function getTasks() {
+            const response = await fetch(`/calendar/?date=${formatISO(selectedDate)}`)
+            const data = await response.json();
+            console.log(data.tasks);
+        }
+
+        prevMonth.onclick = () => {
+            current.setMonth(current.getMonth() - 1);
+            renderCalendar(current);
+        };
+
+        nextMonth.onclick = () => {
+            current.setMonth(current.getMonth() + 1);
+            renderCalendar(current);
+        };
+
+        /* Tasks */
+        const tasksList = document.getElementById("tasksList");
+        const taskInput = document.getElementById("taskInput");
+        const taskModal = document.getElementById("taskModal")
+        addTaskBtn.onclick = async () => {
+            const text = taskInput.value.trim();
+            if (!text) return;
+
+            const payload = {
+                description: text,
+                start_date: formatISO(selectedDate),
+                due_date: null
+            };
+
+            const response = await fetch("/calendar/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            console.log("Created:", data);
+
+            // Добавляем в UI
+            const li = document.createElement("li");
+            li.className = "task";
+            li.innerHTML = `<span>${text}</span><button>&times;</button>`;
+            tasksList.appendChild(li);
+
+            taskInput.value = "";
+        };
+
+        tasksList.onclick = (e) => {
+            if (e.target.tagName === "BUTTON") {
+                e.target.closest(".task")?.remove();
+            }
+        };
+
+        /* init */
+        renderCalendar(current);
         updateSide(selectedDate);
-        document.querySelector(".day-selected")?.classList.remove("day-selected");
-        btn.classList.add("day-selected");
-      };
-
-      calendarGrid.appendChild(btn);
-    }
-  }
-
-  function updateSide(date) {
-    sideTitle.textContent = pretty(date);
-    sideSub.textContent = formatISO(date);
-  }
-
-  prevMonth.onclick = () => {
-    current.setMonth(current.getMonth() - 1);
-    renderCalendar(current);
-  };
-
-  nextMonth.onclick = () => {
-    current.setMonth(current.getMonth() + 1);
-    renderCalendar(current);
-  };
-
-  /* Tasks */
-  const tasksList = document.getElementById("tasksList");
-  const taskInput = document.getElementById("taskInput");
-
-  addTaskBtn.onclick = () => {
-    const text = taskInput.value.trim();
-    if (!text) return;
-    const li = document.createElement("li");
-    li.className = "task";
-    li.innerHTML = `<span>${text}</span><button>&times;</button>`;
-    tasksList.appendChild(li);
-    taskInput.value = "";
-  };
-
-  tasksList.onclick = (e) => {
-    if (e.target.tagName === "BUTTON") {
-      e.target.closest(".task")?.remove();
-    }
-  };
-
-  /* init */
-  renderCalendar(current);
-  updateSide(selectedDate);
-</script>
+    </script>
 {% endblock %}
+

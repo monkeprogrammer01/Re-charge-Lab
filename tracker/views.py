@@ -13,6 +13,7 @@ def tracker(request):
         context = {
             "meals": daily.meals,
             "water": daily.water,
+            "water_range": range(1,11),
             "movement_minutes": daily.movement_minutes,
             "went_outside": daily.went_outside,
             "relaxation_minutes": daily.relaxation_minutes,
@@ -20,6 +21,7 @@ def tracker(request):
             "completed_challenge": daily.completed_challenge,
             "total_points": daily.total_points
         }
+
         return render(request, "tracker/tracker.html", context=context)
     if request.method == "POST":
         today = datetime.date.today()
@@ -27,11 +29,21 @@ def tracker(request):
         data = json.loads(request.body)
         field = data.get("field")
         value = data.get("value")
-        if field == "meals":
-            daily.meals = value
-        if field == "water":
-            daily.water = value
-        daily.save()
+        field_map = {
+            "meals": lambda d, v: setattr(d, "meals", v),
+            "water": lambda d, v: setattr(d, "water", v),
+            "movement_minutes": lambda d, v: setattr(d, "movement_minutes", v),
+            "went_outside": lambda d, v: setattr(d, "went_outside", v),
+            "relaxation_minutes": lambda d, v: setattr(d, "relaxation_minutes", v),
+            "social_connections": lambda d, v: setattr(d, "social_connections", v),
+            "completed_challenge": lambda d, v: setattr(d, "completed_challenge", v),
+        }
+
+        handler = field_map.get(field)
+        if handler:
+            handler(daily, value)
+            daily.calculate_points()
+            daily.save()
 
         return JsonResponse({"total_points": daily.total_points, "meals": daily.meals})
 
