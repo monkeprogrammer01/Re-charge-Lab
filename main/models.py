@@ -14,5 +14,5 @@ class Task(models.Model):
     is_completed = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    start_date = models.DateTimeField(default=timezone.now)
-    due_date = models.DateTimeField(null=True, blank=True)
+    start_date = models.DateField(default=timezone.now)
+    due_date = models.DateField(null=True, blank=True)
