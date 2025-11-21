@@ -30,7 +30,7 @@ def login(request):
             messages.success(request, f"JWT Token: {token}")
             return redirect('profile')
         messages.error(request, "Invalid email or password.")
-        return redirect("auth/login")
+        return render(request, 'users/sign_in.html')
     return render(request, 'users/sign_in.html')
 
 

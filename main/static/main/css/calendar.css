@@ -254,6 +254,59 @@ body {
   line-height: 1;
 }
 
+.tasks-columns {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.to-do,
+.in-progress,
+.completed {
+    flex: 1;
+    padding: 16px;
+    border-radius: 16px;
+    min-height: 200px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.to-do {
+    background-color: #ff7f7f; /* мягкий красный */
+}
+
+.in-progress {
+    background-color: #ffe07f; /* мягкий желтый */
+}
+
+.completed {
+    background-color: #7fff8f; /* мягкий зеленый */
+}
+
+.tasks {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.tasks li {
+    background: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.tasks li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+
 .add-task-row {
   display: flex;
   gap: 8px;
@@ -277,6 +330,9 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+
+
+
 
 /* ===== Responsive ===== */
 

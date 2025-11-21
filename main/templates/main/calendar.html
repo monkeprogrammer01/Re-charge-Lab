@@ -272,6 +272,106 @@
             gap: 10px;
         }
 
+        .kanban-column {
+            width: 100%;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            background: #fff;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Заголовок */
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .column-header .title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .column-header .count {
+            margin-left: auto;
+            color: #777;
+            font-size: 16px;
+        }
+
+        /* Цветные точки */
+        .to-do .dot {
+            width: 10px;
+            height: 10px;
+            background: #e06b6b;
+            border-radius: 50%;
+        }
+
+        .in-progress .dot {
+            width: 10px;
+            height: 10px;
+            background: #5b8ff6;
+            border-radius: 50%;
+        }
+
+        .completed .dot {
+            width: 10px;
+            height: 10px;
+            background: #4BA86E;
+            border-radius: 50%;
+        }
+
+        /* Цвет фона колонок */
+        .to-do {
+            background: #fff6f6;
+        }
+
+        .in-progress {
+            background: #f6f9ff;
+        }
+
+        .completed {
+            background: #f6fff6;
+        }
+
+        /* Карточки задач */
+        .task-card {
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid #e3e3e3;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        /* Кнопка New task */
+        .new-page-btn {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #d44f4f;
+        }
+
+        .in-progress .new-page-btn {
+            color: #3a74dd;
+        }
+
+        .completed .new-page-btn {
+            color: #3f8c4b;
+        }
+
+        .new-page-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
         @media (max-width: 900px) {
             .layout {
                 grid-template-columns: 1fr;
@@ -305,17 +405,46 @@
                 <div class="calendar-grid" id="calendarGrid"></div>
             </section>
 
-            <section class="card">
+            <section class="card" id="task-card" style="height: fit-content">
                 <div class="side-title" id="sideTitle"></div>
                 <div class="side-sub" id="sideSub"></div>
 
-                <ul class="tasks" id="tasksList"></ul>
+                <div class="kanban-column to-do">
+                    <div class="column-header">
+                        <span class="dot"></span>
+                        <span class="title">To Do</span>
+                        <span class="count">2</span>
+                    </div>
+                    <div class="task-card">
+                        <ul class="tasks" id="tasksList"></ul>
+                    </div>
+                    <button class="new-page-btn">+ New task</button>
+                </div>
+
+                <div class="kanban-column in-progress">
+                    <div class="column-header">
+                        <span class="dot"></span>
+                        <span class="title">In progress</span>
+                        <span class="count">1</span>
+                    </div>
+                    <div class="task-card">Some work…</div>
+                    <button class="new-page-btn">+ New task</button>
+                </div>
+
+                <div class="kanban-column completed">
+                    <div class="column-header">
+                        <span class="dot"></span>
+                        <span class="title">Done</span>
+                        <span class="count">0</span>
+                    </div>
+                    <button class="new-page-btn">+ New task</button>
+                </div>
+
 
                 <div class="add-row">
                     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
                     <input type="text" id="taskInput" placeholder="Add task…">
-
                     <button type="button" id="addTaskBtn">Add</button>
 
                 </div>
@@ -332,20 +461,22 @@
             "></div>
 
             </section>
+
+
         </div>
     </main>
-        <div id="taskModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <h3>Add Task</h3>
-                <input type="text" id="modalTaskDesc" placeholder="Task description">
-                <label for="modalDueDate">Due date:</label>
-                <input type="date" id="modalDueDate">
-                <div class="modal-buttons">
-                    <button id="modalCancel">Cancel</button>
-                    <button id="modalSave">Save</button>
-                </div>
+    <div id="taskModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Add Task</h3>
+            <input type="text" id="modalTaskDesc" placeholder="Task description">
+            <label for="modalDueDate">Due date:</label>
+            <input type="date" id="modalDueDate">
+            <div class="modal-buttons">
+                <button id="modalCancel">Cancel</button>
+                <button id="modalSave">Save</button>
             </div>
         </div>
+    </div>
 
 {% endblock %}
 
@@ -508,11 +639,14 @@
                 const li = document.createElement("li");
                 li.className = "task";
 
-                li.innerHTML = `
+
+        li.innerHTML = `
+            <div class="task-inner">
                 <button class="task-toggle">✔</button>
-                <span>${t.description}</span>
-                <button class="task-delete" >🗑</button>
-            `;
+                <span class="task-text">${t.description}</span>
+                <button class="task-delete">🗑</button>
+            </div>
+        `;
 
                 // клик done
                 li.querySelector(".task-toggle").addEventListener("click", () => {

@@ -1,10 +1,11 @@
 {% extends 'main/base.html' %}
+{% load static %}
     {% block extra_css %}
-    <link rel="stylesheet" href="../../static/tracker/css/challenges.css">
+    <link rel="stylesheet" href="{% static 'tracker/css/challenges.css' %}">
     {% endblock %}
 {% block extra_js %}
-    <script src="../../static/tracker/js/challenges.js" defer></script>
-    <script src="auth.js"></script>
+    <script src="{% static 'tracker/js/challenges.js' %}" defer></script>
+    <script src="{% static 'tracker/js/auth.js' %}"></script>
 {% endblock %}
 {% block content %}
 <main class="ch-layout">
