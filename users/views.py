@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from users.models import User
 
@@ -40,3 +41,7 @@ def profile(request):
 
 def forgot_password(request):
     return render(request, 'users/forgot_pass.html')
+
+def logout_user(request):
+    logout(request)
+    return redirect('auth/login/')

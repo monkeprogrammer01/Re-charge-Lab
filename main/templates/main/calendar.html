@@ -478,6 +478,8 @@
 {% endblock %}
 
 {% block content %}
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
     <main>
         <div class="layout">
             <section class="card">
@@ -538,14 +540,6 @@
                     <button class="new-page-btn">+ New task</button>
                 </div>
 
-
-                <div class="add-row">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
-                    <input type="text" id="taskInput" placeholder="Add task…">
-                    <button type="button" id="addTaskBtn">Add</button>
-
-                </div>
                 <div id="toast" style="
                 position: fixed;
                 bottom: 20px;
@@ -701,39 +695,39 @@
     </div>
 `;
 
-                        const actionBtn = document.createElement("button");
-        if (t.status === "todo") {
-            actionBtn.className = "btn-primary";
-            actionBtn.textContent = "Start";
-        } else if (t.status === "in_progress") {
-            actionBtn.className = "btn-success";
-            actionBtn.textContent = "Mark Done";
-        } else if (t.status === "completed") {
-            actionBtn.className = "btn-danger";
-            actionBtn.textContent = "Again";
-        }
+                const actionBtn = document.createElement("button");
+                if (t.status === "todo") {
+                    actionBtn.className = "btn-primary";
+                    actionBtn.textContent = "Start";
+                } else if (t.status === "in_progress") {
+                    actionBtn.className = "btn-success";
+                    actionBtn.textContent = "Mark Done";
+                } else if (t.status === "completed") {
+                    actionBtn.className = "btn-danger";
+                    actionBtn.textContent = "Again";
+                }
 
-        actionBtn.onclick = async () => {
-            let newStatus;
-            if (t.status === "todo") newStatus = "in_progress";
-            else if (t.status === "in_progress") newStatus = "completed";
-            else if (t.status === "completed") newStatus = "todo";
+                actionBtn.onclick = async () => {
+                    let newStatus;
+                    if (t.status === "todo") newStatus = "in_progress";
+                    else if (t.status === "in_progress") newStatus = "completed";
+                    else if (t.status === "completed") newStatus = "todo";
 
-            await updateTaskStatus(t.id, newStatus);
-            await renderTasks();
-        };
+                    await updateTaskStatus(t.id, newStatus);
+                    await renderTasks();
+                };
 
-        card.appendChild(actionBtn);
+                card.appendChild(actionBtn);
 
                 const deleteBtn = document.createElement("button");
-        deleteBtn.className = "task-delete";
-        deleteBtn.innerHTML = `<i class="fas fa-trash"></i>`;
-        deleteBtn.onclick = async () => {
-            await deleteTask(t.id);
-            card.remove();
-            updateCounts();
-        };
-        card.appendChild(deleteBtn);
+                deleteBtn.className = "task-delete";
+                deleteBtn.innerHTML = `<i class="fas fa-trash"></i>`;
+                deleteBtn.onclick = async () => {
+                    await deleteTask(t.id);
+                    card.remove();
+                    updateCounts();
+                };
+                card.appendChild(deleteBtn);
 
                 card.querySelector(".task-delete").onclick = async () => {
                     await deleteTask(t.id);
@@ -759,16 +753,22 @@
         }
 
 
-        async function updateTaskStatus(taskId, newStatus) {
-            await fetch(`/calendar/tasks/update/${taskId}/`, {
+        async function updateTaskStatus(id, newStatus) {
+            console.log(newStatus)
+            const response = await fetch(`/calendar/tasks/update/${id}/`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken
+                    "X-CSRFToken": csrftoken,
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({status: newStatus})
             });
+
+            if (!response.ok) {
+                console.error("Update failed");
+            }
         }
+
 
         document.querySelectorAll(".new-page-btn").forEach(btn => {
             btn.addEventListener("click", async () => {
@@ -779,7 +779,6 @@
                         ? "in_progress"
                         : "completed";
 
-                // Спрашиваем описание задачи
                 const description = prompt("Task description:");
                 if (!description) return;
 

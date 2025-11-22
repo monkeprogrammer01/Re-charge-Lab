@@ -50,6 +50,30 @@ def get_tasks(request):
     ]
     return JsonResponse({"tasks": tasks_list})
 
+
+def update_task(request, id):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        new_status = data.get("status")
+    except:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    if not new_status:
+        return JsonResponse({"error": "Missing status"}, status=400)
+
+    try:
+        task = Task.objects.get(id=id, user=request.user)
+    except Task.DoesNotExist:
+        return JsonResponse({"error": "Task not found"}, status=404)
+
+    task.status = new_status
+    task.save()
+
+    return JsonResponse({"success": True, "status": task.status})
+
 @require_POST
 def delete_task(request, id):
     task = Task.objects.filter(user=request.user, id=id)
