@@ -372,6 +372,102 @@
             background: rgba(0, 0, 0, 0.05);
         }
 
+        .task-card {
+            background: #ffffff;
+            padding: 14px 16px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Левая часть: чекбокс + текст */
+        .task-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        /* Круглый чекбокс */
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #c7c7c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .task-checkbox.checked {
+            background: #4c9aff;
+            border-color: #4c9aff;
+        }
+
+        .task-checkbox.checked::after {
+            content: "✔";
+            font-size: 14px;
+            color: white;
+        }
+
+        /* Текст */
+        .task-text {
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Кнопки справа */
+        .task-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .task-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .task-actions button:hover {
+            opacity: 1;
+        }
+
+
+        .task-delete {
+            border: none; /* убираем рамку */
+            background: transparent; /* прозрачный фон */
+            cursor: pointer; /* курсор как у кнопки */
+            font-size: 16px; /* размер иконки */
+            padding: 4px; /* небольшой внутренний отступ */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .task-delete:hover {
+            background: rgba(224, 107, 107, 0.1); /* легкий фон при наведении */
+            color: #d44f4f; /* чуть ярче при наведении */
+        }
+
+
         @media (max-width: 900px) {
             .layout {
                 grid-template-columns: 1fr;
@@ -405,7 +501,7 @@
                 <div class="calendar-grid" id="calendarGrid"></div>
             </section>
 
-            <section class="card" id="task-card" style="height: fit-content">
+            <section class="card" style="height: fit-content">
                 <div class="side-title" id="sideTitle"></div>
                 <div class="side-sub" id="sideSub"></div>
 
@@ -415,9 +511,9 @@
                         <span class="title">To Do</span>
                         <span class="count">2</span>
                     </div>
-                    <div class="task-card">
-                        <ul class="tasks" id="tasksList"></ul>
-                    </div>
+                    <div class="tasks" id="todoList"></div>
+
+
                     <button class="new-page-btn">+ New task</button>
                 </div>
 
@@ -427,7 +523,8 @@
                         <span class="title">In progress</span>
                         <span class="count">1</span>
                     </div>
-                    <div class="task-card">Some work…</div>
+                    <div class="tasks" id="inProgressList"></div>
+
                     <button class="new-page-btn">+ New task</button>
                 </div>
 
@@ -437,6 +534,7 @@
                         <span class="title">Done</span>
                         <span class="count">0</span>
                     </div>
+                    <div class="tasks" id="completedList"></div>
                     <button class="new-page-btn">+ New task</button>
                 </div>
 
@@ -465,18 +563,6 @@
 
         </div>
     </main>
-    <div id="taskModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <h3>Add Task</h3>
-            <input type="text" id="modalTaskDesc" placeholder="Task description">
-            <label for="modalDueDate">Due date:</label>
-            <input type="date" id="modalDueDate">
-            <div class="modal-buttons">
-                <button id="modalCancel">Cancel</button>
-                <button id="modalSave">Save</button>
-            </div>
-        </div>
-    </div>
 
 {% endblock %}
 
@@ -589,78 +675,137 @@
         };
 
         /* Tasks */
-        const tasksList = document.getElementById("tasksList");
-        const taskInput = document.getElementById("taskInput");
-        const taskModal = document.getElementById("taskModal");
 
-        addTaskBtn.onclick = async () => {
-            const text = taskInput.value.trim();
-            if (!text) return;
-            const todayISO = formatISO(new Date());
 
-            if (formatISO(selectedDate) < formatISO(new Date())) {
-                showToast("You cannot add tasks to past dates.");
-                return;
-            }
 
-            const payload = {
-                description: text,
-                start_date: formatISO(selectedDate),
-                due_date: null
-            };
+        // Контейнеры колонок
+        const todoList = document.getElementById("todoList");
+        const inProgressList = document.getElementById("inProgressList");
+        const completedList = document.getElementById("completedList");
 
-            const response = await fetch("/calendar/tasks/add/", {
+
+        async function renderTasks() {
+            const tasks = await getTasks(selectedDate);
+
+            todoList.innerHTML = "";
+            inProgressList.innerHTML = "";
+            completedList.innerHTML = "";
+            tasks.forEach(t => {
+                const card = document.createElement("div");
+                card.className = "task-card";
+                card.innerHTML = `
+    <div class="task-left">
+{#        <div class="task-checkbox ${t.status === 'completed' ? 'checked' : ''}"></div>#}
+        <div class="task-text">${t.description}</div>
+    </div>
+    </div>
+`;
+
+                        const actionBtn = document.createElement("button");
+        if (t.status === "todo") {
+            actionBtn.className = "btn-primary";
+            actionBtn.textContent = "Start";
+        } else if (t.status === "in_progress") {
+            actionBtn.className = "btn-success";
+            actionBtn.textContent = "Mark Done";
+        } else if (t.status === "completed") {
+            actionBtn.className = "btn-danger";
+            actionBtn.textContent = "Again";
+        }
+
+        actionBtn.onclick = async () => {
+            let newStatus;
+            if (t.status === "todo") newStatus = "in_progress";
+            else if (t.status === "in_progress") newStatus = "completed";
+            else if (t.status === "completed") newStatus = "todo";
+
+            await updateTaskStatus(t.id, newStatus);
+            await renderTasks();
+        };
+
+        card.appendChild(actionBtn);
+
+                const deleteBtn = document.createElement("button");
+        deleteBtn.className = "task-delete";
+        deleteBtn.innerHTML = `<i class="fas fa-trash"></i>`;
+        deleteBtn.onclick = async () => {
+            await deleteTask(t.id);
+            card.remove();
+            updateCounts();
+        };
+        card.appendChild(deleteBtn);
+
+                card.querySelector(".task-delete").onclick = async () => {
+                    await deleteTask(t.id);
+                    card.remove();
+                    updateCounts();
+                };
+
+
+                // Вставляем в нужную колонку
+                if (t.status === "todo") todoList.appendChild(card);
+                else if (t.status === "in_progress") inProgressList.appendChild(card);
+                else if (t.status === "completed") completedList.appendChild(card);
+            });
+
+            updateCounts();
+        }
+
+
+        function updateCounts() {
+            document.querySelector(".to-do .count").textContent = todoList.children.length;
+            document.querySelector(".in-progress .count").textContent = inProgressList.children.length;
+            document.querySelector(".completed .count").textContent = completedList.children.length;
+        }
+
+
+        async function updateTaskStatus(taskId, newStatus) {
+            await fetch(`/calendar/tasks/update/${taskId}/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": csrftoken
                 },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-            console.log("Created:", data);
-
-            await renderTasks();
-            taskInput.value = "";
-        };
-
-        tasksList.onclick = (e) => {
-            if (e.target.tagName === "BUTTON") {
-                e.target.closest(".task")?.remove();
-            }
-        };
-
-        async function renderTasks() {
-            const tasks = await getTasks(selectedDate);
-            tasksList.innerHTML = "";
-
-            tasks.forEach((t, index) => {
-                const li = document.createElement("li");
-                li.className = "task";
-
-
-        li.innerHTML = `
-            <div class="task-inner">
-                <button class="task-toggle">✔</button>
-                <span class="task-text">${t.description}</span>
-                <button class="task-delete">🗑</button>
-            </div>
-        `;
-
-                // клик done
-                li.querySelector(".task-toggle").addEventListener("click", () => {
-                    li.classList.toggle("task-done");
-                });
-
-                li.querySelector(".task-delete").addEventListener("click", async () => {
-                    await deleteTask(t.id);
-                    li.remove();
-                });
-
-                tasksList.appendChild(li);
+                body: JSON.stringify({status: newStatus})
             });
         }
+
+        document.querySelectorAll(".new-page-btn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const column = btn.closest(".kanban-column");
+                const status = column.classList.contains("to-do")
+                    ? "todo"
+                    : column.classList.contains("in-progress")
+                        ? "in_progress"
+                        : "completed";
+
+                // Спрашиваем описание задачи
+                const description = prompt("Task description:");
+                if (!description) return;
+
+                const payload = {
+                    description,
+                    start_date: formatISO(selectedDate),
+                    due_date: null,
+                    status
+                };
+                console.log(payload)
+                const response = await fetch("/calendar/tasks/add/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": csrftoken
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                console.log("Created:", data);
+
+                await renderTasks();
+            });
+        });
+
 
         /* init */
         renderCalendar(current);

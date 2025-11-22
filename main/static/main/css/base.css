@@ -101,15 +101,53 @@ header {
   justify-content: center;
 }
 
-.btn-ghost {
-  background: transparent;
-  color: var(--brand);
+.btn-primary:hover {
+    background-color: #2e6485;
 }
 
-.btn-primary {
-  background: var(--brand);
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(54, 122, 160, 0.25);
+/* Success button */
+.btn-success {
+    border-radius: 999px;
+    color: white;
+    background-color: #4BA86E;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-success:hover {
+    background-color: #3a8a57;
+}
+
+/* Danger button */
+.btn-danger {
+    border-radius: 999px;
+
+    background-color: #F87171;
+    color: white;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-danger:hover {
+    background-color: #e04e4e;
+}
+
+/* Optional: small shadow on focus */
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(54, 122, 160, 0.2);
 }
 
 /* MAIN + CARDS */

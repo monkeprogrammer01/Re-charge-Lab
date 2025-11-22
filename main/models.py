@@ -5,7 +5,7 @@ from users.models import User
 
 class Task(models.Model):
     STATUS_CHOICES = (
-        ('pending', 'Pending'),
+        ('todo', 'todo'),
         ('in_progress', 'In progress'),
         ('completed', 'Completed'),
     )

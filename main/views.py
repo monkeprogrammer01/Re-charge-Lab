@@ -17,6 +17,7 @@ def calendar(request):
 def add_task(request):
     data = json.loads(request.body)
     description = data.get("description")
+    status = data.get("status")
     start_date_str = data.get('start_date')
     due_date_str = data.get('due_date')
     start_date = datetime.fromisoformat(start_date_str).date()
@@ -29,7 +30,7 @@ def add_task(request):
         description=description,
         start_date=start_date,
         due_date=due_date,
-        status="pending"
+        status=status
     )
     return JsonResponse({"message": "Task created", "task_id": task.id})
 
@@ -42,6 +43,7 @@ def get_tasks(request):
         {
             "id": t.id,
             "description": t.description,
+            "status": t.status,
             "due_date": t.due_date.isoformat() if t.due_date else None,
         }
         for t in tasks_qs
