@@ -1,210 +1,279 @@
-// ------------------------------
-// CALENDAR • TechnoPulse
-// ------------------------------
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
 
-document.addEventListener("DOMContentLoaded", () => {
-    // элементы
-    const monthLabel = document.getElementById("monthLabel");
-    const calendarGrid = document.getElementById("calendarGrid");
+const calendarGrid = document.getElementById("calendarGrid");
+const monthLabel = document.getElementById("monthLabel");
+const sideTitle = document.getElementById("sideTitle");
+const sideSub = document.getElementById("sideSub");
 
-    const sideTitle = document.getElementById("sideTitle");
-    const sideSub = document.getElementById("sideSub");
-    const tasksList = document.getElementById("tasksList");
-    const taskInput = document.getElementById("taskInput");
-    const addTaskBtn = document.getElementById("addTaskBtn");
+let current = new Date();
+let selectedDate = new Date();
 
-    const deleteModal = document.getElementById("deleteModal");
-    const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+function formatISO(d) {
+    return d.toISOString().split("T")[0];
+}
 
-    // дата
-    let currentDate = new Date();
-    let selectedDate = new Date();
+function pretty(d) {
+    return d.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+    });
+}
 
-    // удаление
-    let pendingDelete = { dateKey: null, index: null };
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(() => {
+        toast.style.display = "none";
+    }, 1300);
+}
 
-    // ------------------------------
-    // Функция: ключ даты
-    // ------------------------------
-    function getDateKey(date) {
-        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+function renderCalendar(dateObj) {
+    calendarGrid.innerHTML = "";
+
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth();
+
+    monthLabel.textContent = dateObj.toLocaleString("en", {
+        month: "long",
+        year: "numeric"
+    });
+
+    const first = new Date(year, month, 1);
+    let start = first.getDay();
+    if (start === 0) start = 7;
+
+    for (let i = 1; i < start; i++) {
+        calendarGrid.appendChild(document.createElement("div"));
     }
 
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayISO = formatISO(new Date());
 
-    function loadTasks(date) {
-        const key = getDateKey(date);
-        const all = JSON.parse(localStorage.getItem("tasks") || "{}");
-        return all[key] || [];
+    for (let d = 1; d <= daysInMonth; d++) {
+        const btn = document.createElement("button");
+        btn.className = "day";
+        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        btn.dataset.date = iso;
+        btn.textContent = d;
+
+        if (iso === todayISO) btn.classList.add("day-today");
+        if (iso === formatISO(selectedDate)) btn.classList.add("day-selected");
+
+        btn.onclick = () => {
+            selectedDate = new Date(iso);
+            updateSide(selectedDate);
+            document.querySelector(".day-selected")?.classList.remove("day-selected");
+            btn.classList.add("day-selected");
+            renderTasks();
+        };
+        renderTasks();
+        calendarGrid.appendChild(btn);
     }
+}
 
-    function saveTasks(date, tasks) {
-        const key = getDateKey(date);
-        const all = JSON.parse(localStorage.getItem("tasks") || "{}");
-        all[key] = tasks;
-        localStorage.setItem("tasks", JSON.stringify(all));
-    }
+function updateSide(date) {
+    sideTitle.textContent = pretty(date);
+    sideSub.textContent = formatISO(date);
+}
+
+async function getTasks() {
+    const response = await fetch(`/calendar/tasks/?date=${formatISO(selectedDate)}`)
+    const data = await response.json();
+    return data.tasks;
+}
+
+async function deleteTask(taskId) {
+    await fetch(`/calendar/tasks/delete/${taskId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrftoken
+        }
+    })
+}
+
+prevMonth.onclick = () => {
+    current.setMonth(current.getMonth() - 1);
+    renderCalendar(current);
+};
+
+nextMonth.onclick = () => {
+    current.setMonth(current.getMonth() + 1);
+    renderCalendar(current);
+};
+
+/* Tasks */
 
 
-    function renderTasks() {
-        const tasks = loadTasks(selectedDate);
-        tasksList.innerHTML = "";
+const todoList = document.getElementById("todoList");
+const inProgressList = document.getElementById("inProgressList");
+const completedList = document.getElementById("completedList");
+let draggedTaskId;
 
-        tasks.forEach((t, index) => {
-            const li = document.createElement("li");
-            li.className = "task";
+async function renderTasks() {
+    const tasks = await getTasks(selectedDate);
 
-            li.innerHTML = `
-                <button class="task-toggle">✔</button>
-                <span>${t}</span>
-                <button class="task-delete">🗑</button>
-            `;
+    todoList.innerHTML = "";
+    inProgressList.innerHTML = "";
+    completedList.innerHTML = "";
+    tasks.forEach(t => {
+        const card = document.createElement("div");
+        card.draggable = true;
+        card.dataset.id = t.id;
+        card.className = "task-card";
+        card.id = "task-card"
+        card.innerHTML = `
+    <div class="task-left">
+<!--<div class="task-checkbox ${t.status === 'completed' ? 'checked' : ''}"></div>-->
+        <div class="task-text">${t.description}</div>
+    </div>
+    </div>
+`;
+        card.addEventListener("dragstart", (event) => {
+            draggedTaskId = card.dataset.id;
+        })
+        const actionBtn = document.createElement("button");
 
-            // клик done
-            li.querySelector(".task-toggle").addEventListener("click", () => {
-                li.classList.toggle("task-done");
-            });
-
-            // delete
-            li.querySelector(".task-delete").addEventListener("click", () => {
-                pendingDelete = {
-                    dateKey: getDateKey(selectedDate),
-                    index: index
-                };
-                deleteModal.classList.add("open");
-            });
-
-            tasksList.appendChild(li);
-        });
-    }
-
-    // ------------------------------
-    // Рендер календаря
-    // ------------------------------
-    function renderCalendar() {
-        calendarGrid.innerHTML = "";
-
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const firstDay = new Date(year, month, 1);
-        const startWeekday = (firstDay.getDay() + 6) % 7; // понедельник = 0
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        monthLabel.textContent = currentDate.toLocaleString("en-US", {
-            month: "long",
-            year: "numeric"
-        });
-
-        // пустые клетки
-        for (let i = 0; i < startWeekday; i++) {
-            const empty = document.createElement("div");
-            calendarGrid.appendChild(empty);
+        if (t.status === "todo") {
+            actionBtn.className = "btn-primary";
+            actionBtn.textContent = "Start";
+        } else if (t.status === "in_progress") {
+            actionBtn.className = "btn-success";
+            actionBtn.textContent = "Mark Done";
+        } else if (t.status === "completed") {
+            actionBtn.className = "btn-danger";
+            actionBtn.textContent = "Again";
         }
 
-        // дни
-        for (let day = 1; day <= daysInMonth; day++) {
-            const d = new Date(year, month, day);
-            const cell = document.createElement("div");
-            cell.className = "day";
-            cell.textContent = day;
+        actionBtn.onclick = async () => {
+            let newStatus;
+            if (t.status === "todo") newStatus = "in_progress";
+            else if (t.status === "in_progress") newStatus = "completed";
+            else if (t.status === "completed") newStatus = "todo";
 
-            // today
-            const today = new Date();
-            if (
-                d.getDate() === today.getDate() &&
-                d.getMonth() === today.getMonth() &&
-                d.getFullYear() === today.getFullYear()
-            ) {
-                cell.classList.add("day-today");
-            }
+            await updateTaskStatus(t.id, newStatus);
+            await renderTasks();
+        };
 
-            // selected
-            if (
-                d.getDate() === selectedDate.getDate() &&
-                d.getMonth() === selectedDate.getMonth() &&
-                d.getFullYear() === selectedDate.getFullYear()
-            ) {
-                cell.classList.add("day-selected");
-            }
+        card.appendChild(actionBtn);
 
-            // click
-            cell.addEventListener("click", () => {
-                selectedDate = d;
-                updateSidebar();
-                renderCalendar();
-            });
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "task-delete";
+        deleteBtn.innerHTML = `<i class="fas fa-trash"></i>`;
+        deleteBtn.onclick = async () => {
+            await deleteTask(t.id);
+            card.remove();
+            updateCounts();
+        };
+        card.appendChild(deleteBtn);
 
-            calendarGrid.appendChild(cell);
-        }
+        card.querySelector(".task-delete").onclick = async () => {
+            await deleteTask(t.id);
+            card.remove();
+            updateCounts();
+        };
+
+
+        if (t.status === "todo") todoList.appendChild(card);
+        else if (t.status === "in_progress") inProgressList.appendChild(card);
+        else if (t.status === "completed") completedList.appendChild(card);
+    });
+
+    updateCounts();
+}
+
+const taskColumns = document.getElementsByClassName("kanban-column");
+for (let col of taskColumns) {
+    col.addEventListener("dragover", async (e) => {
+        e.preventDefault();
+    })
+    col.addEventListener("drop", async (e) => {
+        e.preventDefault()
+        let newStatus;
+        if (e.currentTarget.classList.contains("to-do")) newStatus = "todo";
+        if (e.currentTarget.classList.contains("in-progress")) newStatus = "in_progress";
+        if (e.currentTarget.classList.contains("completed")) newStatus = "completed";
+        await updateTaskStatus(draggedTaskId, newStatus);
+        await renderTasks()
+    })
+}
+
+function updateCounts() {
+    document.querySelector(".to-do .count").textContent = todoList.children.length;
+    document.querySelector(".in-progress .count").textContent = inProgressList.children.length;
+    document.querySelector(".completed .count").textContent = completedList.children.length;
+}
+
+
+async function updateTaskStatus(id, newStatus) {
+    console.log(newStatus)
+    const response = await fetch(`/calendar/tasks/update/${id}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrftoken,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({status: newStatus})
+    });
+
+    if (!response.ok) {
+        console.error("Update failed");
     }
+}
 
-    // ------------------------------
-    // Обновление правой панели
-    // ------------------------------
-    function updateSidebar() {
-        sideTitle.textContent = selectedDate.toLocaleDateString("en-US", {
-            weekday: "long"
-        });
+const taskModal = document.getElementById("taskModal");
+const saveTaskBtn = document.getElementById("saveTaskBtn");
+const cancelTaskBtn = document.getElementById("cancelTaskBtn");
+let currentStatus = null;
 
-        sideSub.textContent = selectedDate.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
+document.querySelectorAll(".new-page-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const column = btn.closest(".kanban-column");
+        currentStatus = column.classList.contains("to-do")
+            ? "todo"
+            : column.classList.contains("in-progress")
+                ? "in_progress"
+                : "completed";
 
-        renderTasks();
-    }
-
-    // ------------------------------
-    // Добавление задачи
-    // ------------------------------
-    addTaskBtn.addEventListener("click", () => {
-        const text = taskInput.value.trim();
-        if (!text) return;
-
-        const tasks = loadTasks(selectedDate);
-        tasks.push(text);
-        saveTasks(selectedDate, tasks);
-
-        taskInput.value = "";
-        renderTasks();
+        taskModal.classList.add("show");
+        document.getElementById("taskDescription").value = "";
+        document.getElementById("taskDescription").focus();
     });
-
-    // ------------------------------
-    // Модалка удаления
-    // ------------------------------
-    cancelDeleteBtn.addEventListener("click", () => {
-        deleteModal.classList.remove("open");
-    });
-
-    confirmDeleteBtn.addEventListener("click", () => {
-        const all = JSON.parse(localStorage.getItem("tasks") || "{}");
-        const arr = all[pendingDelete.dateKey] || [];
-
-        arr.splice(pendingDelete.index, 1);
-        all[pendingDelete.dateKey] = arr;
-        localStorage.setItem("tasks", JSON.stringify(all));
-
-        deleteModal.classList.remove("open");
-        renderTasks();
-    });
-
-    // ------------------------------
-    // Переключение месяцев
-    // ------------------------------
-    document.getElementById("prevMonth").addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-    });
-
-    document.getElementById("nextMonth").addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    });
-
-    // ------------------------------
-    // START
-    // ------------------------------
-    renderCalendar();
-    updateSidebar();
 });
+
+cancelTaskBtn.onclick = () => taskModal.classList.remove("show");
+
+saveTaskBtn.onclick = async () => {
+    const description = document.getElementById("taskDescription").value.trim();
+    if (!description) return alert("Please enter a task description.");
+
+    const payload = {
+        description,
+        start_date: formatISO(selectedDate),
+        due_date: null,
+        status: currentStatus
+    };
+
+    const response = await fetch("/calendar/tasks/add/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+        taskModal.classList.remove("show");
+        await renderTasks();
+    } else {
+        alert("Failed to add task.");
+    }
+};
+
+/* init */
+renderCalendar(current);
+
+updateSide(selectedDate);
