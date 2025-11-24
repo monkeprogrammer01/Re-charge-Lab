@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const activeFilterBtn = document.querySelector(".ch-filter-btn-active");
         const diffFilter = activeFilterBtn ? activeFilterBtn.dataset.filter : "all";
         const term = searchInput.value.toLowerCase().trim();
-
         cards.forEach(card => {
             const diff = card.dataset.difficulty;
             const title = card.querySelector(".challenge-title").textContent.toLowerCase();

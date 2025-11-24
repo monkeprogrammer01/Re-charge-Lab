@@ -52,4 +52,4 @@ def rating(request):
     return render(request, "tracker/rating.html")
 
 def challenges(request):
-    return render(request, "tracker/challenges.html")
+    return render(request, "tracker/../challenges/templates/challenges/challenges.html")

@@ -29,3 +29,6 @@ class Challenge(models.Model):
     status = models.CharField(max_length=16, choices=status_choices)
     created_at = models.DateTimeField(auto_now_add=True)
     start_date = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.created_at}"
