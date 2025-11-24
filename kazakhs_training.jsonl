@@ -1,0 +1,31 @@
+{"prompt": "User: Мен өте шаршадым, дедлайндар көп, бәрін тастағым келеді.\n\nBot:",
+ "completion": "1. Mood summary: Overwhelmed\n2. Advice: Бір сәтке тоқта. Терең дем ал. Істі бөлшектеп баста.\n3. Small challenge: 20-30 минут демалыс алып, тапсырмаларды кішкентай қадамдарға бөл.\nReason for database: Overwhelmed with deadlines.\n"}
+
+{"prompt": "User: Бүгін көңілім жоқ, ештеңе істегім келмейді.\n\nBot:",
+ "completion": "1. Mood summary: Sad\n2. Advice: Кішігірім қадам жаса, сүйікті ән тыңда.\n3. Small challenge: Бір кружка шәй жасап, 10 минут тынығу.\nReason for database: Feeling low today.\n"}
+
+{"prompt": "User: Мен қуаныштымын, бүгін бәрі жақсы өтті.\n\nBot:",
+ "completion": "1. Mood summary: Happy\n2. Advice: Керемет! .\n3. Small challenge: Бір-екі нәрсені жазып, рахмет айт. Бұл көңіліңді одан сайын көтереді.\nReason for database: Good day, feeling happy.\n"}
+
+{"prompt": "User: Жұмыс тым көп, уақыт жетпей жатыр.\n\nBot:",
+ "completion": "1. Mood summary: Stressed\n2. Advice: Бір тапсырманы аяқтағаннан кейін кіші үзіліс жаса. Приоритеттерді белгіле.\n3. Small challenge: 5 минут демалыс жасап, ең маңызды 3 тапсырманы жаз.\nReason for database: Overloaded with tasks.\n"}
+
+//{"prompt": "User: Мен уайымдап жүрмін, келешек туралы ойлар көп.\n\nBot:",
+ "completion": "1. Mood summary: Anxious\n2. Advice: Терең дем алып, қазіргі сәтке назар аудар. Бір нәрсені бүгін істеп көр.\n3. Small challenge: 10 минут медитация жасап, ойларды қағазға түсір.\nReason for database: Worrying about the future.\n"}
+{"prompt": "User: Стипендия жоқ, ақша жетпей жатыр.\n\nBot:",
+ "completion": "1. Mood summary: Stressed\n2. Advice: Қаржылық қиындықтар болуы мүмкін, бірақ тыныш бол. Бюджет жасап көр, шағын үнемдеу стратегияларын қолданып.\n3. Small challenge: Бір аптаға күнделікті шығындарды жазып, қайда үнемдеуге болатынын қара.\nReason for database: Financial stress due to no scholarship.\n"}
+
+{"prompt": "User: Ата-ана алыста, достарым алыста.\n\nBot:",
+ "completion": "1. Mood summary: Lonely\n2. Advice: Достармен немесе таныстармен байланыс жаса. Телефон арқылы сөйлесу көңілді көтереді.\n3. Small challenge: Бір адамға хабарласып, қысқаша сөйлес. Жақсы жаңалық бөліс.\nReason for database: Feeling lonely because parents are far away.\n"}
+
+{"prompt": "User: Ақша бітті, әлі бірай өмір сүру керк .\n\nBot:",
+ "completion": "1. Mood summary: Tired\n2. Advice: Жұмыс ауыр болуы мүмкін, бірақ жоспарлап ал. Күнделікті кішкентай үзілістер жаса.\n3. Small challenge: Бүгін жұмыстан кейін 15 минут демал. Кішкентай нәрсемен көңіліңді көтер.\nReason for database: Financial and work stress.\n"}
+
+{"prompt": "User: Бәрі күшті, бірақ бәрі әртүрлі.\n\nBot:",
+ "completion": "1. Mood summary: Confused\n2. Advice: Барлығы әртүрлі болуы мүмкін, бірақ сабырлы бол. Кішкентай қадамдармен тәртіпке келтір.\n3. Small challenge: Бір мәселені таңдап, оны шешудің нақты қадамын жаз.\nReason for database: Feeling overwhelmed by complexity.\n"}
+
+{"prompt": "User: Соседілер бесят.\n\nBot:",
+ "completion": "1. Mood summary: Annoyed\n2. Advice: Көршілер кейде мазалайды, бірақ сабырлы бол. Музыка тыңдау немесе басқа тыныш жерге шығу көмектеседі.\n3. Small challenge: 10 минут тыныш музыка тыңда немесе таза ауаға шығып демал.\nReason for database: Annoyed by neighbors.\n"}
+
+{"prompt": "User: Дискретка түсінбеймін.\n\nBot:",
+ "completion": "1. Mood summary: Frustrated\n2. Advice: Қиындықты бөліп қара. Мысалдарды талдап, сұрақтар жаз.\n3. Small challenge: Бір сабақтағы 3 мәселені талдап, жауаптарын жазып көр.\nReason for database: Struggling to understand discrete math.\n"}

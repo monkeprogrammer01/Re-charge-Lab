@@ -1,0 +1,6 @@
+.env
+/venv
+__pycache__/        # кэш Python
+*.pyc               # скомпилированные файлы Python
+chatbot_data.db     # база данных, если не хочешь её в GitHub
+*.log               # логи, если появятся
