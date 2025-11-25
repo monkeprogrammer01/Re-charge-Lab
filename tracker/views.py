@@ -48,8 +48,3 @@ def tracker(request):
 
     return render(request, "tracker/tracker.html")
 
-def rating(request):
-    return render(request, "tracker/rating.html")
-
-def challenges(request):
-    return render(request, "tracker/../challenges/templates/challenges/challenges.html")

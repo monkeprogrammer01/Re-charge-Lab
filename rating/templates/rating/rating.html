@@ -1,0 +1,136 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/rating.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="rating-layout">
+  <!-- Left: summary for current user -->
+  <section class="card">
+    <h2 class="rating-summary-title">Your rating summary</h2>
+
+    <div class="rating-summary-row">
+      <span>Position</span>
+      <span id="rating-position">
+        {% if you %}#{{ you.rank }}{% else %}-{% endif %}
+      </span>
+    </div>
+
+    <div class="rating-summary-row">
+      <span>Total points</span>
+      <span id="rating-points">
+        {% if you %}{{ you.total_points }}{% else %}0{% endif %}
+      </span>
+    </div>
+
+    <div class="rating-summary-row">
+      <span>Completed challenges</span>
+      <span id="rating-completed">
+        {% if you %}{{ you.completed }}{% else %}0{% endif %}
+      </span>
+    </div>
+
+    <p class="rating-small-label">By difficulty (from Challenges)</p>
+
+    <div class="rating-summary-row">
+      <span>Easy (10 pts)</span>
+      <span id="rating-easy">
+        {% if you %}{{ you.easy }}{% else %}0{% endif %}
+      </span>
+    </div>
+
+    <div class="rating-summary-row">
+      <span>Medium (20 pts)</span>
+      <span id="rating-medium">
+        {% if you %}{{ you.medium }}{% else %}0{% endif %}
+      </span>
+    </div>
+
+    <div class="rating-summary-row">
+      <span>Hard (30 pts)</span>
+      <span id="rating-hard">
+        {% if you %}{{ you.hard }}{% else %}0{% endif %}
+      </span>
+    </div>
+
+    <p class="rating-small-label">How points are calculated</p>
+    <p style="font-size: 13px; color: var(--muted); margin: 0;">
+      The backend reads completed challenges from the <strong>Challenges</strong> page and sums their points:
+      Easy = 10, Medium = 20, Hard = 30. Every time you complete a challenge, your total points and position
+      on this page are updated.
+    </p>
+  </section>
+
+  <!-- Right: leaderboard -->
+  <section class="card">
+    <h1 class="rating-main-title">Leaderboard</h1>
+    <p class="rating-main-sub">
+      This table shows all participants and their total points from completed challenges.
+    </p>
+
+    <div class="rating-table-wrapper">
+      <table class="rating-table" id="ratingTable">
+        <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Total points</th>
+          <th>Completed</th>
+          <th>Easy (10)</th>
+          <th>Medium (20)</th>
+          <th>Hard (30)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in leaderboard %}
+          <tr class="{% if row.user_id == request.user.id %}rating-row-you{% endif %}"
+              data-points="{{ row.total_points }}">
+            <td>{{ row.rank }}</td>
+            <td>
+              {{ row.name }}
+              {% if row.user_id == request.user.id %}
+                <span class="rating-badge-you">you</span>
+              {% endif %}
+            </td>
+            <td>{{ row.total_points }}</td>
+            <td>{{ row.completed }}</td>
+            <td>{{ row.easy }}</td>
+            <td>{{ row.medium }}</td>
+            <td>{{ row.hard }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7">No data yet. Complete your first challenge!</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- Shared auth modal -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-card">
+    <h3 class="auth-modal-title">Sign in required</h3>
+    <p class="auth-modal-text">
+      The Rating page is available only for signed-in users. Please sign in or create a new account.
+    </p>
+    <div class="auth-modal-actions">
+      <button type="button" class="btn-ghost" id="authCancelBtn">Maybe later</button>
+      <a href="{% url 'login' %}" class="btn-primary auth-link-btn">Sign in</a>
+      <a href="{% url 'register' %}" class="btn-primary auth-link-btn">Create account</a>
+      {# ↑ тут подставь реальные имена урлов для логина/регистрации или оставь обычные ссылки #}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Backend-флаг авторизации для auth.js / rating.js
+  window.isLoggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
+</script>
+<script src="{% static 'rating/js/rating.js' %}"></script>
+{% endblock %}

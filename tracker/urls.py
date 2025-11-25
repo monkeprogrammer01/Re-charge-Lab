@@ -1,7 +1,6 @@
 from django.urls import path
-from tracker.views import tracker, rating, challenges
+from tracker.views import tracker
 
 urlpatterns = [
     path("", tracker, name="tracker"),
-    path("rating/", rating, name="rating"),
 ]

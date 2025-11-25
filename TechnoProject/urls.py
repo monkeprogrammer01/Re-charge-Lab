@@ -21,5 +21,6 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path("", include('main.urls')),
     path("tracker/", include('tracker.urls')),
-    path("challenges/", include('challenges.urls'))
+    path("challenges/", include('challenges.urls')),
+    path("rating/", include('rating.urls'))
 ]

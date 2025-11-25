@@ -2,33 +2,70 @@ from django.db import models
 from users.models import User
 from django.utils import timezone
 
+
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 class Challenge(models.Model):
+    DIFFICULTY_EASY = "easy"
+    DIFFICULTY_MEDIUM = "medium"
+    DIFFICULTY_HARD = "hard"
 
-    challenge_topics = (
-        ('programming', 'Programming'),
-        ('algorithms', 'Algorithms'),
-        ('math', 'Math'),
-        ('language', 'Language'),
+    DIFFICULTY_CHOICES = [
+        (DIFFICULTY_EASY, "Easy"),
+        (DIFFICULTY_MEDIUM, "Medium"),
+        (DIFFICULTY_HARD, "Hard"),
+    ]
+
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    difficulty = models.CharField(
+        max_length=10,
+        choices=DIFFICULTY_CHOICES,
+        default=DIFFICULTY_EASY,
     )
 
-    status_choices = (
-        ('active', 'Active'),
-        ('failed', 'Failed'),
-        ('completed', 'Completed')
-    )
-    difficulty_choices = (
-        ('easy', 'Easy'),
-        ('medium', 'Medium'),
-        ('hard', 'Hard')
-    )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=16)
-    difficulty = models.CharField(max_length=8, choices=difficulty_choices)
-    description = models.TextField()
-    topic = models.CharField(max_length=16, choices=challenge_topics)
-    status = models.CharField(max_length=16, choices=status_choices)
-    created_at = models.DateTimeField(auto_now_add=True)
-    start_date = models.DateField(default=timezone.now)
+    # для ИИ-бота: какие челленджи активны сегодня
+    is_active = models.BooleanField(default=True)
+    available_from = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.email} - {self.created_at}"
+        return self.title
+
+    @property
+    def points(self) -> int:
+        if self.difficulty == self.DIFFICULTY_EASY:
+            return 10
+        if self.difficulty == self.DIFFICULTY_MEDIUM:
+            return 20
+        if self.difficulty == self.DIFFICULTY_HARD:
+            return 30
+        return 0
+
+
+class ChallengeCompletion(models.Model):
+    STATUS_IN_PROGRESS = "in_progress"
+    STATUS_DONE = "done"
+
+    STATUS_CHOICES = [
+        (STATUS_IN_PROGRESS, "In progress"),
+        (STATUS_DONE, "Done"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_IN_PROGRESS,
+    )
+    finished_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ("user", "challenge")  # один раз на юзера
+
+    def __str__(self):
+        return f"{self.user} – {self.challenge} ({self.status})"
