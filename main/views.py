@@ -1,18 +1,24 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
-from main.models import Task
+from main.services import AIService
+from main.models import Task, Message, ChatSession
 import json
 from datetime import datetime, date
 
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
+
+ai = AIService()
+
+
 def index(request):
     return render(request, "main/index.html")
 
+
 def calendar(request):
     return render(request, "main/calendar.html")
+
 
 def add_task(request):
     data = json.loads(request.body)
@@ -33,6 +39,7 @@ def add_task(request):
         status=status
     )
     return JsonResponse({"message": "Task created", "task_id": task.id})
+
 
 def get_tasks(request):
     user = request.user
@@ -74,8 +81,55 @@ def update_task(request, id):
 
     return JsonResponse({"success": True, "status": task.status})
 
+
 @require_POST
 def delete_task(request, id):
     task = Task.objects.filter(user=request.user, id=id)
     task.delete()
     return JsonResponse({"message": "Task deleted", "taskId": id})
+
+
+def send_message(request):
+    if request.method == "POST":
+        user_id = request.user.id
+        data = json.loads(request.body)
+        user_message = data["message"]
+        session = ChatSession.get_active_session(request.user)
+        if not session:
+            session = ChatSession.create_new_session(request.user)
+        bot_reply = ai.generate_response(user_id, user_message)
+        mood, reason, language = ai.extract_mood_and_reason(bot_reply)
+        msg = ai.save_message(user=request.user, user_message=user_message,session=session, date=datetime.now(), mood=mood, reason=reason,
+                              language=language, bot_response=bot_reply)
+
+        return JsonResponse({
+            "user_message": user_message,
+            "bot_reply": bot_reply,
+            "mood": mood,
+            "reason": reason,
+            "language": language,
+            "timestamp": msg.created_at
+
+        })
+
+
+def chat_history(request):
+    session = ChatSession.objects.filter(user=request.user).get()
+    if not session:
+        session = ChatSession.objects.create(user=request.user)
+    messages = Message.objects.filter(user=request.user, session=session).order_by(
+        "created_at")
+    data = [{
+        "user_text": msg.user_message,
+        "bot_response": msg.bot_response,
+        "mood": msg.mood,
+        "reason": msg.reason,
+        "created_at": msg.created_at.strftime("%Y-%m-%d %H:%M")
+
+    }
+        for msg in messages
+    ]
+    print(data)
+    return JsonResponse({
+        "messages": data
+    })

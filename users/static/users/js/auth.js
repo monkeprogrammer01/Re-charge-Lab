@@ -48,13 +48,13 @@
     // Here you can later connect the real AI backend.
   }
 
-  if (aiTextarea) {
-    aiTextarea.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        handleAiTrigger(e);
-      }
-    });
-  }
+  // if (aiTextarea) {
+  //   aiTextarea.addEventListener("keydown", (e) => {
+  //     if (e.key === "Enter" && !e.shiftKey) {
+  //       handleAiTrigger(e);
+  //     }
+  //   });
+  // }
 
   if (aiPlusBtn) {
     aiPlusBtn.addEventListener("click", handleAiTrigger);

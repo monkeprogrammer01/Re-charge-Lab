@@ -1,154 +1,170 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+
 {% endblock %}
 {% block content %}
-<main class="home-layout">
-  <!-- Hero -->
-  <section class="card home-hero">
-    <p class="home-hero-pill">SDU TechnoPulse workspace</p>
-    <h1 class="home-hero-title">Plan challenges, schedule tasks and track progress in one place.</h1>
-    <p class="home-hero-sub">
-      TechnoPulse combines a challenge list, daily calendar, habit tracker and rating into a single workflow
-      for your team.
-    </p>
-    <ul class="home-hero-list">
-      <li>• Pick a challenge in <strong>Challenges</strong> and check its difficulty and points.</li>
-      <li>• Break it into concrete tasks in the <strong>Calendar</strong> for specific days.</li>
-      <li>• Build habits around study and training with the <strong>Tracker</strong>.</li>
-      <li>• Earn points and climb the <strong>Rating</strong> leaderboard together with your team.</li>
-    </ul>
-  </section>
+    <main class="home-layout">
+        <!-- Hero -->
+        <section class="card home-hero">
+            <p class="home-hero-pill">SDU TechnoPulse workspace</p>
+            <h1 class="home-hero-title">Plan challenges, schedule tasks and track progress in one place.</h1>
+            <p class="home-hero-sub">
+                TechnoPulse combines a challenge list, daily calendar, habit tracker and rating into a single workflow
+                for your team.
+            </p>
+            <ul class="home-hero-list">
+                <li>• Pick a challenge in <strong>Challenges</strong> and check its difficulty and points.</li>
+                <li>• Break it into concrete tasks in the <strong>Calendar</strong> for specific days.</li>
+                <li>• Build habits around study and training with the <strong>Tracker</strong>.</li>
+                <li>• Earn points and climb the <strong>Rating</strong> leaderboard together with your team.</li>
+            </ul>
+        </section>
 
-  <!-- Detailed explanation: pages one under another -->
-  <section class="home-grid">
-    <article class="card">
-      <h2 class="home-feature-title">Calendar</h2>
-      <p class="home-feature-text">
-        Use the calendar to attach tasks to exact days. Each day has its own task list:
-        you can add items, mark them as done with a checkbox and delete them if needed.
-        Perfect for daily to-dos, assignment deadlines and reminders.
-      </p>
-      <div class="home-feature-tags">
-        <span class="home-feature-tag">Daily schedule</span>
-        <span class="home-feature-tag">Per-day task lists</span>
-        <span class="home-feature-tag">Checkbox completion</span>
-      </div>
-    </article>
+        <!-- Detailed explanation: pages one under another -->
+        <section class="home-grid">
+            <article class="card">
+                <h2 class="home-feature-title">Calendar</h2>
+                <p class="home-feature-text">
+                    Use the calendar to attach tasks to exact days. Each day has its own task list:
+                    you can add items, mark them as done with a checkbox and delete them if needed.
+                    Perfect for daily to-dos, assignment deadlines and reminders.
+                </p>
+                <div class="home-feature-tags">
+                    <span class="home-feature-tag">Daily schedule</span>
+                    <span class="home-feature-tag">Per-day task lists</span>
+                    <span class="home-feature-tag">Checkbox completion</span>
+                </div>
+            </article>
 
-    <article class="card">
-      <h2 class="home-feature-title">Challenges</h2>
-      <p class="home-feature-text">
-        Challenges are bigger goals: coding practice, study sprints or activity missions.
-        Every challenge has a difficulty level and a fixed amount of points:
-        <strong>Easy = 10 pts</strong>, <strong>Medium = 20 pts</strong>, <strong>Hard = 30 pts</strong>.
-        Status and progress can be updated as you work.
-      </p>
-      <div class="home-feature-tags">
-        <span class="home-feature-tag">Easy – 10 pts</span>
-        <span class="home-feature-tag">Medium – 20 pts</span>
-        <span class="home-feature-tag">Hard – 30 pts</span>
-        <span class="home-feature-tag">Status &amp; progress</span>
-      </div>
-    </article>
+            <article class="card">
+                <h2 class="home-feature-title">Challenges</h2>
+                <p class="home-feature-text">
+                    Challenges are bigger goals: coding practice, study sprints or activity missions.
+                    Every challenge has a difficulty level and a fixed amount of points:
+                    <strong>Easy = 10 pts</strong>, <strong>Medium = 20 pts</strong>, <strong>Hard = 30 pts</strong>.
+                    Status and progress can be updated as you work.
+                </p>
+                <div class="home-feature-tags">
+                    <span class="home-feature-tag">Easy – 10 pts</span>
+                    <span class="home-feature-tag">Medium – 20 pts</span>
+                    <span class="home-feature-tag">Hard – 30 pts</span>
+                    <span class="home-feature-tag">Status &amp; progress</span>
+                </div>
+            </article>
 
-    <article class="card">
-      <h2 class="home-feature-title">Tracker</h2>
-      <p class="home-feature-text">
-        The tracker is for daily habits: “solve 3 problems”, “read 20 pages”, “train 30 minutes”.
-        For each day you see how many habits you have, how many are completed,
-        and a small weekly overview that shows your consistency.
-      </p>
-      <div class="home-feature-tags">
-        <span class="home-feature-tag">Habits per day</span>
-        <span class="home-feature-tag">Completed vs total</span>
-        <span class="home-feature-tag">Weekly overview</span>
-      </div>
-    </article>
+            <article class="card">
+                <h2 class="home-feature-title">Tracker</h2>
+                <p class="home-feature-text">
+                    The tracker is for daily habits: “solve 3 problems”, “read 20 pages”, “train 30 minutes”.
+                    For each day you see how many habits you have, how many are completed,
+                    and a small weekly overview that shows your consistency.
+                </p>
+                <div class="home-feature-tags">
+                    <span class="home-feature-tag">Habits per day</span>
+                    <span class="home-feature-tag">Completed vs total</span>
+                    <span class="home-feature-tag">Weekly overview</span>
+                </div>
+            </article>
 
-    <article class="card">
-      <h2 class="home-feature-title">Rating</h2>
-      <p class="home-feature-text">
-        The rating page aggregates points from completed challenges.
-        Each participant has total points, number of completed challenges,
-        and a breakdown by difficulty (how many Easy / Medium / Hard).
-        It is the main place to see who is leading right now.
-      </p>
-      <div class="home-feature-tags">
-        <span class="home-feature-tag">Leaderboard</span>
-        <span class="home-feature-tag">Total points</span>
-        <span class="home-feature-tag">Difficulty breakdown</span>
-      </div>
-    </article>
-  </section>
+            <article class="card">
+                <h2 class="home-feature-title">Rating</h2>
+                <p class="home-feature-text">
+                    The rating page aggregates points from completed challenges.
+                    Each participant has total points, number of completed challenges,
+                    and a breakdown by difficulty (how many Easy / Medium / Hard).
+                    It is the main place to see who is leading right now.
+                </p>
+                <div class="home-feature-tags">
+                    <span class="home-feature-tag">Leaderboard</span>
+                    <span class="home-feature-tag">Total points</span>
+                    <span class="home-feature-tag">Difficulty breakdown</span>
+                </div>
+            </article>
+        </section>
 
-  <!-- How-to block -->
-  <section class="card">
-    <h2 class="home-howto-title">How your team can use TechnoPulse</h2>
-    <p class="home-howto-text">
-      1. At the start of the week, choose several challenges for the team in the <strong>Challenges</strong> page.
-    </p>
-    <p class="home-howto-text">
-      2. For each challenge, create small tasks in the <strong>Calendar</strong> and spread them across days.
-    </p>
-    <p class="home-howto-text">
-      3. Every day, mark personal habits in the <strong>Tracker</strong> to keep a healthy rhythm.
-    </p>
-    <p class="home-howto-text">
-      4. At the end of the week, open <strong>Rating</strong> to see who collected the most points from completed
-      challenges.
-    </p>
-  </section>
-</main>
+        <!-- How-to block -->
+        <section class="card">
+            <h2 class="home-howto-title">How your team can use TechnoPulse</h2>
+            <p class="home-howto-text">
+                1. At the start of the week, choose several challenges for the team in the <strong>Challenges</strong>
+                page.
+            </p>
+            <p class="home-howto-text">
+                2. For each challenge, create small tasks in the <strong>Calendar</strong> and spread them across days.
+            </p>
+            <p class="home-howto-text">
+                3. Every day, mark personal habits in the <strong>Tracker</strong> to keep a healthy rhythm.
+            </p>
+            <p class="home-howto-text">
+                4. At the end of the week, open <strong>Rating</strong> to see who collected the most points from
+                completed
+                challenges.
+            </p>
+        </section>
+        {#        <section class="card">#}
+        <div id="chat-messages" class="messages-box">
 
-<!-- Sticky AI bar (always at the bottom like ChatGPT) -->
-<div class="home-ai-bar">
-  <div class="home-ai-bar-inner">
-    <div class="home-ai-bar-label">TechnoPulse assistant (available only for signed-in users)</div>
-    <div class="home-ai-input-row">
-      <button type="button" class="home-ai-plus-btn" id="aiPlusBtn">+</button>
-      <textarea
-        id="aiTextarea"
-        class="home-ai-textarea"
-        placeholder="Ask something about your challenges, calendar or rating…"
-      ></textarea>
+        </div>
+        {#        </section>#}
+    </main>
+
+    <!-- Sticky AI bar (always at the bottom like ChatGPT) -->
+    <div class="home-ai-bar">
+        <div class="home-ai-bar-inner">
+            {% if not user.is_authenticated %}
+                <div class="home-ai-bar-label">TechnoPulse assistant (available only for signed-in users)</div>
+            {% endif %}
+            {#            {% include 'main/chat.html' %}#}
+            <div class="home-ai-input-row">
+                <button type="button" class="home-ai-plus-btn" id="sendBtn">+</button>
+                <textarea
+                        id="aiTextarea"
+                        class="home-ai-textarea"
+                        placeholder="Ask something about your challenges, calendar or rating…"
+                ></textarea>
+            </div>
+            {% if not user.is_authenticated %}
+
+                <div class="home-ai-note">
+                    When you sign in, this field will be connected to the AI assistant your teammate is building.
+                </div>
+            {% endif %}
+        </div>
     </div>
-    <div class="home-ai-note">
-      When you sign in, this field will be connected to the AI assistant your teammate is building.
-    </div>
-  </div>
-</div>
 
-<!-- Shared auth modal for Rating + AI -->
-<div id="authModal" class="auth-modal">
-  <div class="auth-modal-card">
-    <h3 class="auth-modal-title">Sign in required</h3>
-    <p class="auth-modal-text">
-      The Rating page and AI assistant are available only for signed-in users.
-      Please sign in or create a new account.
-    </p>
-    <div class="auth-modal-actions">
-      <button type="button" class="btn-ghost" id="authCancelBtn">Maybe later</button>
-      <a href="sign_in.html" class="btn-primary auth-link-btn">Sign in</a>
-      <a href="create_account.html" class="btn-primary auth-link-btn">Create account</a>
+    <!-- Shared auth modal for Rating + AI -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-card">
+            <h3 class="auth-modal-title">Sign in required</h3>
+            <p class="auth-modal-text">
+                The Rating page and AI assistant are available only for signed-in users.
+                Please sign in or create a new account.
+            </p>
+            <div class="auth-modal-actions">
+                <button type="button" class="btn-ghost" id="authCancelBtn">Maybe later</button>
+                <a href="sign_in.html" class="btn-primary auth-link-btn">Sign in</a>
+                <a href="create_account.html" class="btn-primary auth-link-btn">Create account</a>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
 
 {% endblock %}
 {% block extra_js %}
-{#    <script>#}
-{#  /* Later the backend will set this value dynamically */#}
-{#  window.isLoggedIn = false;#}
-{#</script>#}
-{#<script src="{% static 'tracker/js/auth.js' %}"></script>#}
-  <script>
-    // Default avatar (inline SVG as data URI), used if assets/profile.jpg missing
-    window.TP_DEFAULT_AVATAR =
-      'data:image/svg+xml;utf8,' +
-      encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+    {#    <script>#}
+    {#  /* Later the backend will set this value dynamically */#}
+    {#  window.isLoggedIn = false;#}
+    {#</script>#}
+    {#<script src="{% static 'tracker/js/auth.js' %}"></script>#}
+    <script>
+        csrftoken = document.querySelector('[name=csrf-token]').content
+
+        // Default avatar (inline SVG as data URI), used if assets/profile.jpg missing
+        window.TP_DEFAULT_AVATAR =
+            'data:image/svg+xml;utf8,' +
+            encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
         <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="#0f7ea8"/><stop offset="1" stop-color="#0b5f82"/>
         </linearGradient></defs>
@@ -157,26 +173,167 @@
         <path d="M28 132c8-24 30-36 52-36s44 12 52 36" fill="#fff" opacity="0.9"/>
       </svg>`);
 
-    // Burger toggle for small screens
-    const burger = document.getElementById('tp-burger');
-    const navCenter = document.querySelector('.nav-center');
-    burger.addEventListener('click', () => {
-      const open = navCenter.classList.toggle('open');
-      burger.setAttribute('aria-expanded', String(open));
-    });
+        // Burger toggle for small screens
+        {#const burger = document.getElementById('tp-burger');#}
+        {#const navCenter = document.querySelector('.nav-center');#}
+        {#burger.addEventListener('click', () => {#}
+        {#    const open = navCenter.classList.toggle('open');#}
+        {#    burger.setAttribute('aria-expanded', String(open));#}
 
-    // Smooth scroll + active state
-    document.querySelectorAll('.nav-center a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        e.preventDefault();
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if(el){ window.scrollTo({top: el.offsetTop - 72, behavior:'smooth'}); }
-        navCenter.classList.remove('open');
-        burger.setAttribute('aria-expanded','false');
-        document.querySelectorAll('.nav-center .nav-link').forEach(l=>l.classList.remove('active'));
-        a.classList.add('active');
-      });
-    });
-  </script>
+        // Smooth scroll + active state
+        document.querySelectorAll('.nav-center a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const id = a.getAttribute('href').slice(1);
+                const el = document.getElementById(id);
+                if (el) {
+                    window.scrollTo({top: el.offsetTop - 72, behavior: 'smooth'});
+                }
+                navCenter.classList.remove('open');
+                burger.setAttribute('aria-expanded', 'false');
+                document.querySelectorAll('.nav-center .nav-link').forEach(l => l.classList.remove('active'));
+                a.classList.add('active');
+            });
+        });
+
+        const sendBtn = document.getElementById("sendBtn")
+        const textArea = document.getElementById("aiTextarea")
+        textArea.addEventListener("keydown", async (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault()
+                const msg = textArea.value.trim()
+                if (msg) {
+                    textArea.value = ''
+                    await sendMessage(msg);
+
+                }
+            }
+        })
+        sendBtn.onclick = async () => {
+            const msg = textArea.value.trim()
+            if (msg) {
+                textArea.value = '';
+                await sendMessage(msg);
+
+            }
+        }
+
+
+        let isLoading = false;
+
+        async function sendMessage(text) {
+
+            scrollToBottom();
+            addMessageToUI(text, "user")
+            localStorage.setItem("hasUserSent", 'true')
+
+            isLoading = true
+            const res = await fetch("/chat/send/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrftoken
+                },
+                body: JSON.stringify({"message": text})
+            });
+
+            const data = await res.json();
+            isLoading = false;
+            addMessageToUI(data.bot_reply, "bot")
+            scrollToBottom()
+
+        }
+
+        async function getMessages() {
+
+            const res = await fetch("/chat/messages/", {
+                method: "GET",
+                headers: {
+                    "X-CSRFToken": csrftoken
+                }
+            })
+            console.log(res.status)
+            if (!res.ok) {
+                throw new Error("failed to fetch")
+            }
+            const data = await res.json();
+            await renderMessages(data);
+            checkWelcomeMessage(data)
+
+        }
+
+        function addMessageToUI(text, sender) {
+            if (sender === "bot") {
+                text = formatAIText(text);
+            }
+            const box = document.getElementById("chat-messages");
+
+            const div = document.createElement("div");
+            div.className = `message ${sender}`;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+
+
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+
+        }
+
+        function checkWelcomeMessage(messagesData) {
+            const hasMessagesFromServer = messagesData.messages && messagesData.messages.length > 0;
+
+            if (!hasMessagesFromServer) {
+                showWelcomeMessage();
+            }
+        }
+
+        function showWelcomeMessage() {
+            const welcomeText = "👋 Hello! I am your AI assistant at TechnoPulse. I can help you with:\n\n• Planning tasks in your calendar\n• Selecting challenges based on difficulty\n• Tracking habits\n• Explaining the rating system";
+            addMessageToUI(welcomeText, "bot");
+        }
+
+        async function renderMessages(data) {
+            const box = document.getElementById("chat-messages");
+            box.innerHTML = ""; // clear old content
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(msg => {
+                    addMessageToUI(msg.user_text, "user");
+                    addMessageToUI(msg.bot_response, "bot");
+                });
+                localStorage.setItem("hasUserSent", 'true')
+            } else {
+                localStorage.setItem("hasUserSent", 'false')
+
+            }
+
+
+        }
+
+        function formatAIText(text) {
+            return text
+                // Жирный текст: **текст** → <strong>текст</strong>
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                // Курсив: *текст* → <em>текст</em>
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                // Заголовки: ## Заголовок → <h3>Заголовок</h3>
+                .replace(/^## (.*$)/gim, '<h3 class="ai-heading">$1</h3>')
+                // Списки с точками
+                .replace(/^• (.*$)/gim, '<li class="ai-list-item">$1</li>')
+                // Списки с цифрами
+                .replace(/^\d+\. (.*$)/gim, '<li class="ai-list-item">$1</li>')
+                // Переносы строк
+                .replace(/\n/g, '<br>')
+                // Оборачиваем списки в ul
+                .replace(/(<li class="ai-list-item">.*<\/li>)/g, '<ul class="ai-list">$1</ul>')
+                // Убираем дублирующиеся ul
+                .replace(/<\/ul>\s*<ul class="ai-list">/g, '');
+        }
+
+        getMessages();
+    </script>
 {% endblock %}
