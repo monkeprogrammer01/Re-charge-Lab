@@ -9,18 +9,17 @@
         <div class="container">
 
             <div class="header">
-                <div class="date" id="current-date">Понедельник, 15 декабря</div>
+                <div class="date" id="current-date">Monday, December 15</div>
                 <div class="balance-score" id="balance-score">{{ total_points }}%</div>
                 <div class="progress-bar">
                     <div class="progress-fill" id="main-progress" style="width: {{ total_points }}%"></div>
                 </div>
-                <div class="balance-status" id="balance-status">🟡 Средний уровень баланса</div>
+                <div class="balance-status" id="balance-status">🟡 Average balance level</div>
             </div>
 
             <div class="section physical">
                 <div class="section-header">
-                    <span class="icon"><i class="fas fa-walking"></i></span> ФИЗИЧЕСКОЕ ЗДОРОВЬЕ
-
+                    <span class="icon"><i class="fas fa-walking"></i></span> PHYSICAL HEALTH
                 </div>
                 <div class="section-progress">
                     <div class="section-progress-fill" style="width: {{ total_points }}%"></div>
@@ -30,20 +29,20 @@
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🍽️</span>
-                            ПИТАНИЕ
+                            NUTRITION
                         </div>
                         <div class="meals-container">
                             <div class="meal {% if meals.breakfast %}eaten{% endif %}" data-meal="breakfast">
                                 <div>🍳</div>
-                                <div class="meal-time">Завтрак</div>
+                                <div class="meal-time">Breakfast</div>
                             </div>
                             <div class="meal {% if meals.lunch %}eaten{% endif %}" data-meal="lunch">
                                 <div>🍲</div>
-                                <div class="meal-time">Обед</div>
+                                <div class="meal-time">Lunch</div>
                             </div>
                             <div class="meal {% if meals.dinner %}eaten{% endif %}" data-meal="dinner">
                                 <div>🍝</div>
-                                <div class="meal-time">Ужин</div>
+                                <div class="meal-time">Dinner</div>
                             </div>
                         </div>
                     </div>
@@ -52,13 +51,12 @@
                     <div class="tracker-item">
                         <div class="tracker-title" id="tracker-water">
                             <span class="emoji">💧</span>
-                            ВОДА ({{ water }}/10)
+                            WATER ({{ water }}/10)
                         </div>
                         <div class="water-container">
                             {% for i in water_range %}
                                 <div class="glass {% if i <= water %}filled{% endif %}">💧</div>
                             {% endfor %}
-
                         </div>
                     </div>
 
@@ -66,16 +64,16 @@
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🚶</span>
-                            ДВИЖЕНИЕ
+                            MOVEMENT
                         </div>
                         <div class="movement-controls">
                             <button class="time-btn" onclick="updateMovement(-5)">-5</button>
-                            <div class="time-display" id="movement-time">{{ movement_minutes }} мин</div>
+                            <div class="time-display" id="movement-time">{{ movement_minutes }} min</div>
                             <button class="time-btn" onclick="updateMovement(5)">+5</button>
                         </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="went-outside">
-                            <label for="went-outside">🚶 Вышел на улицу</label>
+                            <label for="went-outside">🚶 Went outside</label>
                         </div>
                     </div>
 
@@ -83,11 +81,11 @@
                     {#                    <div class="tracker-item">#}
                     {#                        <div class="tracker-title">#}
                     {#                            <span class="emoji">⚡</span>#}
-                    {#                            СТИМУЛЯТОРЫ#}
+                    {#                            STIMULANTS#}
                     {#                        </div>#}
                     {#                        <div class="stimulants-grid">#}
                     {#                            <div class="stimulant-item">#}
-                    {#                                <div>☕ Кофе</div>#}
+                    {#                                <div>☕ Coffee</div>#}
                     {#                                <div class="stimulant-buttons">#}
                     {#                                    <button class="stimulant-btn active">1</button>#}
                     {#                                    <button class="stimulant-btn">2</button>#}
@@ -95,7 +93,7 @@
                     {#                                </div>#}
                     {#                            </div>#}
                     {#                            <div class="stimulant-item">#}
-                    {#                                <div>🍩 Сладкое</div>#}
+                    {#                                <div>🍩 Sweets</div>#}
                     {#                                <div class="stimulant-buttons">#}
                     {#                                    <button class="stimulant-btn">1</button>#}
                     {#                                    <button class="stimulant-btn">2</button>#}
@@ -112,7 +110,7 @@
             <div class="section emotional">
                 <div class="section-header">
                     <span class="icon"><i class="fa-solid fa-heart"></i></span>
-                    ЭМОЦИОНАЛЬНОЕ СОСТОЯНИЕ
+                    EMOTIONAL STATE
                 </div>
                 <div class="section-progress">
                     <div class="section-progress-fill" style="width: 50%"></div>
@@ -122,20 +120,20 @@
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">😊</span>
-                            НАСТРОЕНИЕ
+                            MOOD
                         </div>
                         <div class="mood-container">
                             <div class="mood-option selected" data-mood="3">
                                 <div>😊</div>
-                                <div>Хорошо</div>
+                                <div>Good</div>
                             </div>
                             <div class="mood-option" data-mood="2">
                                 <div>😐</div>
-                                <div>Нормально</div>
+                                <div>Normal</div>
                             </div>
                             <div class="mood-option" data-mood="1">
                                 <div>😢</div>
-                                <div>Плохо</div>
+                                <div>Bad</div>
                             </div>
                         </div>
                     </div>
@@ -143,11 +141,11 @@
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🧘</span>
-                            РЕЛАКС ({{ relaxation_minutes }}/10 мин)
+                            RELAXATION ({{ relaxation_minutes }}/10 min)
                         </div>
                         <div class="relaxation-controls">
                             <button class="time-btn" onclick="updateRelaxation(-5)">-5</button>
-                            <div class="time-display" id="relaxation-time">{{ relaxation_minutes }} мин</div>
+                            <div class="time-display" id="relaxation-time">{{ relaxation_minutes }} min</div>
                             <button class="time-btn" onclick="updateRelaxation(5)">+5</button>
                         </div>
                     </div>
@@ -155,15 +153,14 @@
                     <div class="tracker-item">
                         <div class="tracker-title">
                             <span class="emoji">🎯</span>
-                            ЧЕЛЛЕНДЖ ДНЯ
+                            DAILY CHALLENGE
                         </div>
                         <div class="challenge-card">
-                            <div class="challenge-text">"Сделай 5 глубоких вдохов"</div>
+                            <div class="challenge-text">"Take 5 deep breaths"</div>
                             <button class="challenge-btn" id="challengeButton"
     {% if completed_challenge %}disabled{% endif %} onclick="completeChallenge()">
     {% if completed_challenge %}Completed{% else %}Complete Challenge{% endif %}
 </button>
-
                         </div>
                     </div>
                 </div>
@@ -171,8 +168,7 @@
 
             <div class="section social">
                 <div class="section-header">
-                    <span class="icon"><i class="fas fa-user-friends"></i></span> СОЦИАЛЬНЫЕ СВЯЗИ
-                    СОЦИАЛЬНЫЕ СВЯЗИ
+                    <span class="icon"><i class="fas fa-user-friends"></i></span> SOCIAL CONNECTIONS
                 </div>
                 <div class="section-progress">
                     <div class="section-progress-fill" style="width: 20%"></div>
@@ -182,15 +178,15 @@
                     <div class="social-checkboxes">
                         <div class="social-checkbox">
                             <input type="checkbox" id="social-chat" {% if 'social-chat' in social_connections %}checked{% endif %}>
-                            <label for="social-chat">💬 Написал другу</label>
+                            <label for="social-chat">💬 Texted a friend</label>
                         </div>
                         <div class="social-checkbox">
                             <input type="checkbox" id="social-call" {% if 'social-call' in social_connections %}checked{% endif %}>
-                            <label for="social-call">📞 Позвонил близким</label>
+                            <label for="social-call">📞 Called family</label>
                         </div>
                         <div class="social-checkbox">
                             <input type="checkbox" id="social-colleague" {% if 'social-colleague' in social_connections %}checked{% endif %}>
-                            <label for="social-colleague">👥 Пообщался с коллегой</label>
+                            <label for="social-colleague">👥 Talked with colleague</label>
                         </div>
                     </div>
                 </div>
@@ -199,27 +195,27 @@
             <div class="section">
                 <div class="section-header">
                     <span class="icon"><i class="fa-solid fa-chart-area"></i></span>
-                    ПРОГРЕСС ДНЯ
+                    DAILY PROGRESS
                 </div>
 
                 <div class="achievements">
                     <div class="achievement">
                         <span>💧</span>
-                        <span>Выпил {{ water }} стакана воды</span>
+                        <span>Drank {{ water }} glasses of water</span>
                     </div>
                     <div class="achievement">
                         <span>🍳</span>
-                        <span>Позавтракал и пообедал</span>
+                        <span>Had breakfast and lunch</span>
                     </div>
                     <div class="achievement">
                         <span>🚶</span>
-                        <span>{{ movement_minutes }} минут активности</span>
+                        <span>{{ movement_minutes }} minutes of activity</span>
                     </div>
                 </div>
 
                 <div class="notifications">
-                    <div>🔔 TELEGRAM: ✅ Привязан</div>
-                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Получаешь умные напоминания</div>
+                    <div>🔔 TELEGRAM: ✅ Connected</div>
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Receiving smart reminders</div>
                 </div>
             </div>
         </div>
@@ -228,5 +224,4 @@
 {% endblock %}
 {% block extra_js %}
     <script src="{% static 'tracker/js/tracker.js' %}"></script>
-
 {% endblock %}

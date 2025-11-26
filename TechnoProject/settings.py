@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'users',
     'tracker',
     'challenges',
-    'rating'
+    'rating',
+    'telegram_bot'
 ]
 
 

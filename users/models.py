@@ -38,6 +38,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.TextField(default="def")
     surname = models.TextField(default="def")
     gender = models.TextField(default="def")
+
+    telegram_username = models.CharField(max_length=32, null=True, blank=True)
+    telegram_chat_id = models.BigIntegerField(null=True, blank=True)
+    telegram_verification_token = models.CharField(max_length=10, null=True, blank=True)
+    is_telegram_confirmed = models.BooleanField(default=False)
+    telegram_connected_at =  models.DateTimeField(null=True, blank=True)
+    telegram_token_created = models.DateTimeField(null=True, blank=True)
+    telegram_token_expires = models.DateTimeField(null=True, blank=True)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -54,6 +63,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def token(self):
         return self._generate_jwt()
 
+    def generate_telegram_link(self):
+        token = self._generate_jwt()
+        return f"https://t.me/TechnoPulse1Bot?startgroup={token}"
     def _generate_jwt(self):
         dt = datetime.now() + timedelta(days=1)
         token = jwt.encode({

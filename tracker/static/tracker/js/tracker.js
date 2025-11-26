@@ -2,7 +2,7 @@ const csrftoken = document.querySelector('[name=csrf-token]').content;
 
 const now = new Date();
 const options = {weekday: 'long', day: 'numeric', month: 'long'};
-document.getElementById('current-date').textContent = now.toLocaleDateString('ru-RU', options);
+document.getElementById('current-date').textContent = now.toLocaleDateString('en-En', options);
 
 function getMealsState() {
     const meals = {};
