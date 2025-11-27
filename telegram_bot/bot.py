@@ -1,34 +1,32 @@
+# bot.py
 import asyncio
 import logging
 import os
-import sys
-import django
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage  # ← Добавь это
 from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(BASE_DIR)
+# Настраиваем Django
+from telegram_bot.setup_django import setup_django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TechnoProject.settings')
+setup_django()
 
-try:
-    django.setup()
-except django.core.exceptions.ImproperlyConfigured as e:
-    print(f"Django setup error: {e}")
-    print(f"BASE_DIR: {BASE_DIR}")
-    print(f"Current directory: {os.getcwd()}")
-    sys.exit(1)
+from telegram_bot.handlers import router
 
 load_dotenv()
 
-from handlers import router
-
-bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
-dp = Dispatcher()
-
+async def send_message_async(chat_id, text):
+    print("send_message")
+    bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
+    await bot.send_message(chat_id, text)
 
 async def main():
+    bot = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
+    storage = MemoryStorage()  # ← Хранилище для состояний
+    dp = Dispatcher(storage=storage)  # ← Передаем хранилище
+
     dp.include_router(router)
+
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
 
@@ -42,7 +40,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt:
-        print("Bot stopped by user")
+    asyncio.run(main())

@@ -1,34 +1,36 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block content %}
-<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-<h1>{{ user.email }}</h1>
-<button class="btn-danger" id="logoutBtn">Logout</button>
-<a href="{% url 'telegram_connect' %}"><button class="btn-primary">Connect telegram</button></a>
+    <h1>{{ user.email }}</h1>
+    <button class="btn-danger" id="logoutBtn">Logout</button>
+    {% if not user.is_telegram_confirmed %}
+    {% include 'telegram_bot/telegram_connect.html' %}
+    {% endif %}
 {% endblock %}
 {% block extra_js %}
-<script>
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-    logoutBtn = document.getElementById("logoutBtn")
-    logoutBtn.onclick = () => {
-        fetch("/auth/logout/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken
-            }
-
-        })
-            .then(res => {
-                if (res.ok) {
-                    localStorage.removeItem("jwt_token");
-                    window.location.href = "/auth/login/"
-                } else {
-                    alert("failed logout")
+    <script>
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        logoutBtn = document.getElementById("logoutBtn")
+        logoutBtn.onclick = () => {
+            fetch("/auth/logout/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrftoken
                 }
+
             })
-            .catch((err) => console.error(err))
-    }
-</script>
+                .then(res => {
+                    if (res.ok) {
+                        localStorage.removeItem("jwt_token");
+                        window.location.href = "/auth/login/"
+                    } else {
+                        alert("failed logout")
+                    }
+                })
+                .catch((err) => console.error(err))
+        }
+    </script>
 {% endblock %}

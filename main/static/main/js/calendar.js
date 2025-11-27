@@ -246,12 +246,17 @@ document.querySelectorAll(".new-page-btn").forEach(btn => {
 cancelTaskBtn.onclick = () => taskModal.classList.remove("show");
 
 saveTaskBtn.onclick = async () => {
+    const time = document.getElementById("taskTime").value;
     const description = document.getElementById("taskDescription").value.trim();
+    const [hours, minutes] = time.split(':');
+    const startDate = new Date(selectedDate);
+    startDate.setHours(hours, minutes, 0, 0);
+    const startDateISO = startDate.toISOString();
     if (!description) return alert("Please enter a task description.");
-
+    if (!time) return alert("Please select a time.");
     const payload = {
         description,
-        start_date: formatISO(selectedDate),
+        start_date: startDateISO,
         due_date: null,
         status: currentStatus
     };

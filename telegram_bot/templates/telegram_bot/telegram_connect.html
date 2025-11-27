@@ -1,68 +1,16 @@
-{% extends 'main/base.html' %}
 
-{% block content %}
-<div class="container">
-    <h2>🔗 Connect Telegram</h2>
+<div id="telegramLink" style="display: block;">
+    <div class="alert alert-success">
+        <p><strong>New connection method:</strong></p>
+        <ol>
+            <li>Open <a href="https://t.me/TechnoPulse1Bot" target="_blank">@TechnoPulse1Bot</a></li>
+            <li>Send <code>/start</code> command</li>
+            <li>Follow the login instructions in the bot</li>
+            <li>Enter your TechnoPulse email and password</li>
+        </ol>
 
-    <div id="connectionStatus">
-        {% if user.is_telegram_connected %}
-            <div class="alert alert-success">
-                <p>✅ Telegram connected as @{{ user.telegram_username }}</p>
-                <button onclick="disconnectTelegram()" class="btn btn-warning">Disconnect</button>
-            </div>
-        {% else %}
-            <div class="alert alert-info">
-                <p>Connect Telegram to receive notifications</p>
-                <button onclick="connectTelegram()" class="btn btn-primary">Connect Telegram</button>
-            </div>
-        {% endif %}
-    </div>
-
-    <div id="telegramLink" style="display: none; margin-top: 20px;">
-        <div class="alert alert-success">
-            <p>Click the link below to connect your Telegram:</p>
-            <a id="telegramUrl" href="#" target="_blank" class="btn btn-success">Open Telegram</a>
-            <button onclick="copyLink()" class="btn btn-secondary">Copy Link</button>
-        </div>
+        <a href="https://t.me/TechnoPulse1Bot" target="_blank" class="btn btn-primary">
+            📱 Open Telegram Bot
+        </a>
     </div>
 </div>
-
-<script>
-function connectTelegram() {
-    fetch('/telegram/connect/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            // Показываем ссылку
-            document.getElementById('telegramUrl').href = data.telegram_url;
-            document.getElementById('telegramLink').style.display = 'block';
-
-            // Автоматически открываем Telegram (опционально)
-            window.open(data.telegram_url, '_blank');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to generate connection link');
-    });
-}
-
-function copyLink() {
-    const link = document.getElementById('telegramUrl').href;
-    navigator.clipboard.writeText(link).then(() => {
-        alert('Link copied to clipboard!');
-    });
-}
-
-function disconnectTelegram() {
-    if (confirm('Are you sure you want to disconnect Telegram?')) {
-        alert('Disconnect functionality to be implemented');
-    }
-}
-</script>
-{% endblock %}

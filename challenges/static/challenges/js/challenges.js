@@ -34,8 +34,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.classList.add("ch-hidden");
             }
         });
-
         updateStats();
+    }
+
+    async function updateChallengeStatus(challengeId, status) {
+        try {
+            const response = await fetch(`/challenges/${challengeId}/complete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: status })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error updating challenge status:', error);
+            throw error;
+        }
+    }
+
+    function getCSRFToken() {
+        return document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
 
     filterButtons.forEach(btn => {
@@ -48,38 +74,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
     searchInput.addEventListener("input", applyFilter);
 
-    // смена статуса
-    list.addEventListener("click", e => {
+    list.addEventListener("click", async (e) => {
         if (!e.target.classList.contains("status-toggle")) return;
+
         const card = e.target.closest(".challenge-card");
+        const challengeId = card.dataset.challengeId;
         const badge = card.querySelector(".ch-status-badge");
         const bar = card.querySelector(".ch-progress-bar");
 
-        let state = card.dataset.status;
-        if (state === "not-started") {
-            state = "in-progress";
-            badge.textContent = "In progress";
-            badge.className = "ch-status-badge ch-status-in-progress";
-            e.target.textContent = "Mark done";
-            bar.style.width = "60%";
-        } else if (state === "in-progress") {
-            state = "completed";
-            badge.textContent = "Completed";
-            badge.className = "ch-status-badge ch-status-completed";
-            e.target.textContent = "Again";
-            bar.style.width = "100%";
+        let newStatus = card.dataset.status;
+        let newBadgeText = "";
+        let newBadgeClass = "";
+        let newButtonText = "";
+        let newProgressWidth = "";
+
+        if (newStatus === "not-started") {
+            newStatus = "in-progress";
+            newBadgeText = "In progress";
+            newBadgeClass = "ch-status-badge ch-status-in-progress";
+            newButtonText = "Mark done";
+            newProgressWidth = "60%";
+        } else if (newStatus === "in-progress") {
+            newStatus = "completed";
+            newBadgeText = "Completed";
+            newBadgeClass = "ch-status-badge ch-status-completed";
+            newButtonText = "Again";
+            newProgressWidth = "100%";
             bar.classList.add("ch-progress-completed");
         } else {
-            state = "not-started";
-            badge.textContent = "Not started";
-            badge.className = "ch-status-badge ch-status-not-started";
-            e.target.textContent = "Start";
-            bar.style.width = "0%";
+            newStatus = "not-started";
+            newBadgeText = "Not started";
+            newBadgeClass = "ch-status-badge ch-status-not-started";
+            newButtonText = "Start";
+            newProgressWidth = "0%";
             bar.classList.remove("ch-progress-completed");
         }
 
-        card.dataset.status = state;
-        updateStats();
+        try {
+            await updateChallengeStatus(challengeId, newStatus);
+
+            badge.textContent = newBadgeText;
+            badge.className = newBadgeClass;
+            e.target.textContent = newButtonText;
+            bar.style.width = newProgressWidth;
+            card.dataset.status = newStatus;
+
+            updateStats();
+
+        } catch (error) {
+            alert('Failed to update challenge status. Please try again.');
+            console.error('Status update failed:', error);
+        }
     });
 
     applyFilter();

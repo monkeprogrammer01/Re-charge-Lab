@@ -4,8 +4,8 @@ from django.views.decorators.http import require_POST
 from main.services import AIService
 from main.models import Task, Message, ChatSession
 import json
-from datetime import datetime, date
-
+from datetime import datetime, date, timedelta
+from main.tasks import remind_task
 from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 
@@ -26,10 +26,16 @@ def add_task(request):
     status = data.get("status")
     start_date_str = data.get('start_date')
     due_date_str = data.get('due_date')
-    start_date = datetime.fromisoformat(start_date_str).date()
+
+    start_date = datetime.fromisoformat(start_date_str)
+    if timezone.is_naive(start_date):
+        start_date = timezone.make_aware(start_date)
     due_date = None
-    if start_date < date.today():
-        return JsonResponse({"error": "Cannot add tasks to past dates."}, status=400)
+    now = timezone.now()
+    # if start_date < timezone.now():
+    #     return JsonResponse({"error": "Cannot add tasks to past dates."}, status=400)
+    delta = start_date - now - timedelta(minutes=10)
+    countdown_seconds = max(delta.total_seconds(), 0)
 
     task = Task.objects.create(
         user=request.user,
@@ -38,6 +44,9 @@ def add_task(request):
         due_date=due_date,
         status=status
     )
+
+    remind_task.apply_async(args=[task.id], countdown=countdown_seconds)
+
     return JsonResponse({"message": "Task created", "task_id": task.id})
 
 

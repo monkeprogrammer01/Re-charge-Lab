@@ -17,10 +17,7 @@ class AIService:
         self.client = OpenAI(api_key=API_KEY)
         self.sessions = {}
 
-    # ===== Сессии пользователей =====
 
-
-    # ===== System Prompt =====
         self.SYSTEM_PROMPT = SYSTEM_PROMPT = """
         You are an emotional support assistant.
         User writes about mood, feelings, and activities.
