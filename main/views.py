@@ -32,8 +32,19 @@ def add_task(request):
         start_date = timezone.make_aware(start_date)
     due_date = None
     now = timezone.now()
-    # if start_date < timezone.now():
-    #     return JsonResponse({"error": "Cannot add tasks to past dates."}, status=400)
+    time_difference = start_date - now
+
+    if time_difference.total_seconds() < 0:
+        return JsonResponse({
+            "error": "Cannot add tasks to past dates.",
+            "details": f"The selected time has already passed."
+        }, status=400)
+
+    if time_difference.total_seconds() < 600:  # 10 минут в секундах
+        return JsonResponse({
+            "error": "Task must be scheduled at least 10 minutes in advance.",
+            "details": f"Please select a time at least 10 minutes from now."
+        }, status=400)
     delta = start_date - now - timedelta(minutes=10)
     countdown_seconds = max(delta.total_seconds(), 0)
 
@@ -54,7 +65,7 @@ def get_tasks(request):
     user = request.user
     date_str = request.GET.get("date")  # "YYYY-MM-DD"
 
-    tasks_qs = Task.objects.filter(user=user, start_date=date_str)
+    tasks_qs = Task.objects.filter(user=user, start_date__date=date_str)
     tasks_list = [
         {
             "id": t.id,

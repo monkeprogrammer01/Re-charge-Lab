@@ -5,7 +5,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from asgiref.sync import sync_to_async
 import logging
-
+from main.models import Task
+from django.utils import timezone
 router = Router()
 logger = logging.getLogger(__name__)
 
@@ -98,7 +99,6 @@ async def process_password(message: Message, state: FSMContext):
     await state.clear()
 
 
-# Отмена процесса
 @router.message(Command("cancel"))
 @router.message(F.text.casefold() == "cancel")
 async def cancel_handler(message: Message, state: FSMContext):
@@ -107,3 +107,44 @@ async def cancel_handler(message: Message, state: FSMContext):
         "Login cancelled.",
         reply_markup=ReplyKeyboardRemove()
     )
+
+@router.message(Command("my_tasks"))
+async def my_tasks(message: Message):
+    chat_id = message.chat.id
+    today = timezone.localdate()
+    now = timezone.localtime(timezone.now())
+    tasks = await sync_to_async(
+        lambda: list(
+            Task.objects.filter(
+                user__telegram_chat_id=chat_id,
+                start_date__date=today
+            ).order_by("start_date")
+        )
+    )()
+    if not tasks:
+        await message.answer(
+            "No upcoming tasks for today!\n\n"
+            "You're all caught up! 🎉"
+        )
+        return
+    response = "⏰ Upcoming Tasks:\n\n"
+    for task in tasks:
+        start_local = timezone.localtime(task.start_date)
+        time_left = start_local - now
+        total_seconds = time_left.total_seconds()
+
+        if total_seconds < 0:
+            time_display = "⏰ Time passed"
+        else:
+            hours_left = int(total_seconds // 3600)
+            minutes_left = int((total_seconds % 3600) // 60)
+            if hours_left > 0:
+                time_display = f"in {hours_left}h {minutes_left}m"
+            else:
+                time_display = f"in {minutes_left}m"
+        status = "✅" if task.status == 'completed' else "⏳"
+
+        response += f"{status} {start_local.strftime('%H:%M')} - {task.description}\n"
+        response += f"   {time_display}\n\n"
+
+    await message.answer(response)

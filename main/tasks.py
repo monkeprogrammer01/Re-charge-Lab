@@ -2,7 +2,7 @@ from celery import shared_task
 from django.utils import timezone
 from tracker.models import DailyBalance
 from main.models import Task
-from telegram_bot.bot import send_message_async, send_message
+from telegram_bot.bot import send_message_async, send_message_sync
 import asyncio
 import logging
 
@@ -14,8 +14,7 @@ def remind_task(task_id):
     user = task.user
     if user.is_telegram_confirmed:
         text = f"Quick reminder: {task.description} (10 minutes left)"
-        asyncio.run(send_message_async(user.telegram_chat_id, text))
-
+        send_message_sync(chat_id=user.telegram_chat_id, text=text)
     task.notified = True
     task.save()
 
@@ -26,7 +25,7 @@ def reminder_meal(meal_type: str):
     balances = DailyBalance.objects.filter(**filter_kwargs)
     text = f"Dont forget to have your {meal_type}"
     for balance in balances:
-        asyncio.run(send_message_async(balance.user.telegram_chat_id, text))
+        send_message_sync(balance.user.telegram_chat_id, text)
 
 @shared_task(name="main.tasks.reminder_breakfast")
 def reminder_breakfast():
