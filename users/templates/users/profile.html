@@ -1,36 +1,400 @@
 {% extends 'main/base.html' %}
 {% load static %}
-{% block content %}
-    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+:root {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --secondary: #3b82f6;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-600: #4b5563;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+}
 
-    <h1>{{ user.email }}</h1>
-    <button class="btn-danger" id="logoutBtn">Logout</button>
-    {% if not user.is_telegram_confirmed %}
-    {% include 'telegram_bot/telegram_connect.html' %}
-    {% endif %}
-{% endblock %}
-{% block extra_js %}
-    <script>
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-        logoutBtn = document.getElementById("logoutBtn")
-        logoutBtn.onclick = () => {
-            fetch("/auth/logout/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": csrftoken
-                }
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-            })
-                .then(res => {
-                    if (res.ok) {
-                        localStorage.removeItem("jwt_token");
-                        window.location.href = "/auth/login/"
-                    } else {
-                        alert("failed logout")
-                    }
-                })
-                .catch((err) => console.error(err))
+    .profile-header {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .avatar-profile {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        font-weight: bold;
+    }
+
+    .user-info h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 8px;
+    }
+
+    .user-info p {
+        color: var(--gray-600);
+        margin-bottom: 4px;
+    }
+
+    .user-info i {
+        width: 20px;
+        text-align: center;
+        margin-right: 8px;
+        color: var(--primary);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary);
+    }
+
+    .stat-card.warning {
+        border-left-color: var(--warning);
+    }
+
+    .stat-card.success {
+        border-left-color: var(--secondary);
+    }
+
+    .stat-card.danger {
+        border-left-color: var(--danger);
+    }
+
+    .stat-icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+        color: var(--primary);
+    }
+
+    .stat-card.warning .stat-icon { color: var(--warning); }
+    .stat-card.success .stat-icon { color: var(--secondary); }
+    .stat-card.danger .stat-icon { color: var(--danger); }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+
+    .progress-section {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 24px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 20px;
+    }
+
+    .progress-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .progress-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: var(--gray-100);
+        border-radius: 12px;
+    }
+
+    .progress-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .progress-icon.breakfast { background: #fef3c7; color: #d97706; }
+    .progress-icon.lunch { background: #d1fae5; color: #059669; }
+    .progress-icon.dinner { background: #e0e7ff; color: #4f46e5; }
+    .progress-icon.water { background: #cffafe; color: #0891b2; }
+
+    .progress-info {
+        flex: 1;
+    }
+
+    .progress-label {
+        font-weight: 500;
+        color: var(--gray-800);
+        margin-bottom: 4px;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: var(--gray-200);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-fill.breakfast { background: #f59e0b; }
+    .progress-fill.lunch { background: #10b981; }
+    .progress-fill.dinner { background: #3b82f6; }
+    .progress-fill.water { background: #06b6d4; }
+
+    .tasks-section {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .task-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        background: var(--gray-100);
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .task-item.completed {
+        opacity: 0.7;
+        border-left-color: var(--secondary);
+    }
+
+    .task-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--gray-300);
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .task-checkbox.checked {
+        background: var(--secondary);
+        border-color: var(--secondary);
+        color: white;
+    }
+
+    .task-checkbox.checked::after {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .task-content {
+        flex: 1;
+    }
+
+    .task-title {
+        font-weight: 500;
+        color: var(--gray-800);
+        margin-bottom: 4px;
+    }
+
+    .task-time {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+    }
+
+    .badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .badge.upcoming { background: #fef3c7; color: #d97706; }
+    .badge.completed { background: #d1fae5; color: #059669; }
+    .badge.overdue { background: #fee2e2; color: #dc2626; }
+
+    @media (max-width: 768px) {
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
         }
-    </script>
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-container {
+            padding: 10px;
+        }
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Header -->
+    <div class="profile-header">
+        <div class="avatar-profile">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="user-info">
+            <h1>{{ user.name }}</h1>
+            <p><i class="fas fa-envelope"></i>{{ user.email }}</p>
+            <p><i class="fas fa-map-marker-alt"></i>Member since {{ user.date_joined|date:"F Y" }}</p>
+            <p><i class="fab fa-telegram"></i>Telegram: {{ user.telegram_username|default:"Not connected" }}</p>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="stat-value">{{ completed_tasks }}/{{ total_tasks }}</div>
+            <div class="stat-label">Today's Tasks Completed</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon"><i class="fas fa-fire"></i></div>
+            <div class="stat-value">{{ streak_days }}</div>
+            <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-value">{{ upcoming_tasks_count }}</div>
+            <div class="stat-label">Upcoming Tasks</div>
+        </div>
+        <div class="stat-card danger">
+            <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+            <div class="stat-value">{{ weekly_completed }}</div>
+            <div class="stat-label">Weekly Completed</div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+        <h2 class="section-title"><i class="fas fa-tasks"></i> Daily Progress</h2>
+        <div class="progress-grid">
+            <div class="progress-item">
+                <div class="progress-icon breakfast"><i class="fas fa-egg"></i></div>
+                <div class="progress-info">
+                    <div class="progress-label">Breakfast</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill breakfast" style="width: {{ breakfast_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-icon lunch"><i class="fas fa-utensils"></i></div>
+                <div class="progress-info">
+                    <div class="progress-label">Lunch</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill lunch" style="width: {{ lunch_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-icon dinner"><i class="fas fa-pizza-slice"></i></div>
+                <div class="progress-info">
+                    <div class="progress-label">Dinner</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill dinner" style="width: {{ dinner_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-icon water"><i class="fas fa-tint"></i></div>
+                <div class="progress-info">
+                    <div class="progress-label">Water Intake</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill water" style="width: {{ water_progress }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks Section -->
+    <div class="tasks-section">
+        <h2 class="section-title"><i class="fas fa-list-check"></i> Today's Tasks</h2>
+        <div class="task-list">
+            {% for task in today_tasks %}
+            <div class="task-item {% if task.status in 'completed' %}completed{% endif %}">
+                <div class="task-checkbox {% if task.status in 'in_progress' %}checked{% endif %}"></div>
+                <div class="task-content">
+                    <div class="task-title">{{ task.description }}</div>
+                    <div class="task-time"><i class="fas fa-clock"></i> {{ task.start_date|time }} • {{ task.get_status_display }}</div>
+                </div>
+                <div class="badge {% if task.completed %}completed{% elif task.is_overdue %}overdue{% else %}upcoming{% endif %}">
+                    {% if task.is_completed %}
+                        <i class="fas fa-check"></i>Completed
+                    {% elif task.is_overdue %}
+                        <i class="fas fa-exclamation-triangle"></i>Overdue
+                    {% else %}
+                        <i class="fas fa-clock"></i>Upcoming
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div style="text-align: center; padding: 40px; color: var(--gray-600);">
+                <i class="fas fa-party-horn" style="font-size: 3rem; margin-bottom: 16px; display: block;"></i>
+                No tasks for today! Enjoy your free time!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
