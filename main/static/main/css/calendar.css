@@ -173,8 +173,8 @@ main {
 }
 
 .day-today {
-    background: #f4fff7;
-    border-color: #d4f5dd;
+    background: rgba(255, 236, 148, 0.45);
+    border: 1.5px solid rgba(255, 193, 7, 0.6);
 }
 
 .day-selected {
@@ -540,4 +540,17 @@ main {
     .layout {
         grid-template-columns: 1fr;
     }
+}
+
+.day-overdue {
+    border: 2px solid #e06b6b; /* красный — просрочено */
+}
+
+.day-overdue:hover {
+    border: 2px solid #e06b6b;
+}
+.day-selected.day-overdue,
+.day-selected.day-in-progress,
+.day-selected.day-completed {
+    box-shadow: 0 0 0 2px var(--brand-soft);
 }

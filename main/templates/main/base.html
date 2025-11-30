@@ -3,51 +3,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="csrf-token" content="{{ csrf_token }}">
 
-<title>{% block title %}TechnoPulse — Main{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>{% block title %}TechnoPulse — Main{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main/css/base.css' %}">
     {% block extra_css %} {% endblock %}
 </head>
 <body>
 
-  <header>
-  <div class="header-left">
-    <a href="{% url 'main' %}" class="logo-tp">TechnoPulse</a>
-      <nav class="nav-links" aria-label="Primary">
-        <a class="nav-link {% if request.resolver_match.url_name == 'main' %}nav-link-active{% endif %}" href="{% url 'main' %}">Dashboard</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'calendar' %}nav-link-active{% endif %}" href="{% url 'calendar' %}">Calendar</a>
+<header>
+            <div class="burger-menu" id="burger-menu" aria-label="Menu" tabindex="0">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    <div class="header-left">
+        <a href="{% url 'main' %}" class="logo-tp">TechnoPulse</a>
 
-        <a class="nav-link {% if request.resolver_match.url_name == 'challenges' %}nav-link-active{% endif %}" href="{% url 'challenges' %}">Challenges</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'tracker' %}nav-link-active{% endif %}" href="{% url 'tracker' %}">Tracker</a>
-        <a class="nav-link {% if request.resolver_match.url_name == 'rating' %}nav-link-active{% endif %}" href="{% url 'rating' %}">Rating</a>
-      </nav>
-  </div>
-  <div class="header-right">
-      {% if not user.is_authenticated %}
-    <a href="{% url 'login' %}" class="btn-ghost">Sign in</a>
-    <a href="{% url 'register' %}" class="btn-primary">Create account</a>
-          {% else %}
-                <a class="nav-avatar" href="{% url 'profile' %}" aria-label="Profile">
-        <img id="tp-avatar" class="avatar" alt="Profile"
-             src="{% static 'main/img/avatar-default.svg' %}" width="10%"
-{#             http://www.w3.org/2000/svg#}
-             onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;" />
-      </a>
-      {% endif %}
-  </div>
+        <nav class="nav-links" aria-label="Primary">
+            <a class="nav-link {% if request.resolver_match.url_name == 'main' %}nav-link-active{% endif %}"
+               href="{% url 'main' %}">Dashboard</a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'calendar' %}nav-link-active{% endif %}"
+               href="{% url 'calendar' %}">Calendar</a>
+
+            <a class="nav-link {% if request.resolver_match.url_name == 'challenges' %}nav-link-active{% endif %}"
+               href="{% url 'challenges' %}">Challenges</a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'tracker' %}nav-link-active{% endif %}"
+               href="{% url 'tracker' %}">Tracker</a>
+            <a class="nav-link {% if request.resolver_match.url_name == 'rating' %}nav-link-active{% endif %}"
+               href="{% url 'rating' %}">Rating</a>
+        </nav>
+    </div>
+    <div class="header-right">
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login' %}" class="btn-ghost">Sign in</a>
+            <a href="{% url 'register' %}" class="btn-primary">Create account</a>
+        {% else %}
+            <a class="nav-avatar" href="{% url 'profile' %}" aria-label="Profile">
+                <img id="tp-avatar" class="avatar" alt="Profile"
+                     src="{% static 'main/img/avatar-default.svg' %}" width="10%"
+                        {#             http://www.w3.org/2000/svg#}
+                     onerror="this.onerror=null; this.src=window.TP_DEFAULT_AVATAR;"/>
+            </a>
+        {% endif %}
+    </div>
+
 </header>
-        {% block content %}
+{% block content %}
 
-        {% endblock %}
-    {% block extra_js %}{% endblock %}
+{% endblock %}
+{% block extra_js %}{% endblock %}
 </body>
 <script src="{% static 'users/js/auth.js' %}"></script>
 </html>

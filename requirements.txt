@@ -36,3 +36,4 @@ typing_extensions==4.15.0
 yarl==1.22.0
 
 celery~=5.5.3
+requests~=2.32.5

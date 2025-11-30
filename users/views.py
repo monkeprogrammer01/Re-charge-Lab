@@ -50,7 +50,6 @@ def profile(request):
     now = timezone.now()
 
     try:
-
         today_tasks = Task.objects.filter(
             user=user,
             start_date__date=today

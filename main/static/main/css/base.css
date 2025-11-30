@@ -150,6 +150,60 @@ button:focus {
     box-shadow: 0 0 0 3px rgba(54, 122, 160, 0.2);
 }
 
+/* BURGER MENU */
+.burger-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.burger-menu span {
+  display: block;
+  height: 3px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.burger-menu.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.open span:nth-child(2) {
+  opacity: 0;
+}
+.burger-menu.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Мобильная версия */
+@media (max-width: 900px) {
+  .nav-links {
+    position: absolute;
+    top: 64px; /* ниже header */
+    left: 0;
+    right: 0;
+    background: var(--card);
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    display: none; /* по умолчанию скрыто */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .burger-menu {
+    display: flex;
+  }
+}
+
+
 
 
 main {

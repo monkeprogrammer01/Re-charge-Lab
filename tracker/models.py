@@ -20,6 +20,10 @@ class DailyBalance(models.Model):
         default=list,
     )
 
+    breakfast_notified = models.BooleanField(default=False)
+    lunch_notified = models.BooleanField(default=False)
+    dinner_notified = models.BooleanField(default=False)
+
     total_points = models.PositiveIntegerField(default=0)
 
     def calculate_points(self):

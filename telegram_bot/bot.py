@@ -16,14 +16,6 @@ load_dotenv()
 
 BOT = Bot(token=os.getenv("TELEGRAM_BOT_TOKEN"))
 
-def send_message_sync(chat_id, text):
-    try:
-        loop = asyncio.get_running_loop()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-    loop.run_until_complete(send_message_async(chat_id, text))
-
 async def send_message_async(chat_id, text):
     print("send_message")
     await BOT.send_message(chat_id, text)

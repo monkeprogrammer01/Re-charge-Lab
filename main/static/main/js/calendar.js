@@ -30,16 +30,13 @@ function showToast(msg) {
     }, 1300);
 }
 
-function renderCalendar(dateObj) {
+async function renderCalendar(dateObj) {
     calendarGrid.innerHTML = "";
 
     const year = dateObj.getFullYear();
     const month = dateObj.getMonth();
 
-    monthLabel.textContent = dateObj.toLocaleString("en", {
-        month: "long",
-        year: "numeric"
-    });
+    monthLabel.textContent = dateObj.toLocaleString("en", { month: "long", year: "numeric" });
 
     const first = new Date(year, month, 1);
     let start = first.getDay();
@@ -55,25 +52,49 @@ function renderCalendar(dateObj) {
     for (let d = 1; d <= daysInMonth; d++) {
         const btn = document.createElement("button");
         btn.className = "day";
-        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        const iso = `${year}-${String(month + 1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
         btn.dataset.date = iso;
         btn.textContent = d;
 
         if (iso === todayISO) btn.classList.add("day-today");
         if (iso === formatISO(selectedDate)) btn.classList.add("day-selected");
 
-        btn.onclick = () => {
+        // Получаем задачи для этой даты
+        const tasks = await getTasksByDate(iso);
+
+        // Проверяем состояние задач
+        if (new Date(iso) < new Date(todayISO)) {
+            if (tasks.some(t => t.status !== "completed")) {
+                btn.classList.add("day-overdue"); // красный
+            } else {
+                btn.classList.add("day-completed"); // зелёный
+            }
+        } else {
+            if (tasks.some(t => t.status !== "completed")) {
+                btn.classList.add("day-pending"); // синий
+            }
+        }
+
+        btn.onclick = async () => {
             selectedDate = new Date(iso);
             updateSide(selectedDate);
             document.querySelector(".day-selected")?.classList.remove("day-selected");
             btn.classList.add("day-selected");
-            renderTasks();
+            await renderTasks();
         };
-        renderTasks();
+
         calendarGrid.appendChild(btn);
     }
+
+    await renderTasks();
 }
 
+// Новая функция для получения задач по конкретной дате
+async function getTasksByDate(dateISO) {
+    const response = await fetch(`/calendar/tasks/?date=${dateISO}`);
+    const data = await response.json();
+    return data.tasks;
+}
 function updateSide(date) {
     sideTitle.textContent = pretty(date);
     sideSub.textContent = formatISO(date);
