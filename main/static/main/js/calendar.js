@@ -147,8 +147,10 @@ async function renderTasks() {
         card.id = "task-card"
         card.innerHTML = `
     <div class="task-left">
-<!--<div class="task-checkbox ${t.status === 'completed' ? 'checked' : ''}"></div>-->
+            ${t.time ? `<div class="task-time">${t.time}</div>` : ""}
+
         <div class="task-text">${t.description}</div>
+
     </div>
     </div>
 `;

@@ -27,12 +27,16 @@ def remind_task(task_id):
 @shared_task
 def reminder_meal(meal_type: str):
     today = timezone.localdate()
-    filter_kwargs = {f"meals__{meal_type}": False, f"{meal_type}_notified": False, "user__is_telegram_confirmed": True, "date": today}
-    balances = DailyBalance.objects.filter(**filter_kwargs)
-    text = f"Dont forget to have your {meal_type}"
+    balances = DailyBalance.objects.filter(
+        **{f"{meal_type}_notified": False, "user__is_telegram_confirmed": True, "date": today}
+    )
+
     for balance in balances:
-        send_message_sync(balance.user.telegram_chat_id, text)
-        DailyBalance.objects.filter(id=balance.id).update(**{f"{meal_type}_notified": True})
+        if not balance.meals.get(meal_type, False):
+            text = f"Don't forget to have your {meal_type}"
+            send_message_sync(chat_id=balance.user.telegram_chat_id, text=text)
+            setattr(balance, f"{meal_type}_notified", True)
+            balance.save()
 
 @shared_task(name="main.tasks.reminder_breakfast")
 def reminder_breakfast():

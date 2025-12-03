@@ -314,6 +314,30 @@
 
         }
 
+        const aiScheduleContainer = document.getElementById("aiScheduleContainer");
+        const importBtn = document.getElementById("importScheduleBtn");
+
+        function showAISchedule(tasks) {
+            aiScheduleContainer.innerHTML = ""; // очистить старое
+            tasks.forEach(task => {
+                const div = document.createElement("div");
+                div.textContent = `${task.time} — ${task.description}`;
+                aiScheduleContainer.appendChild(div);
+            });
+            importBtn.style.display = "block"; // показать кнопку
+        }
+
+        function handleBotReply(botReply) {
+            if (botReply.type === "schedule" && botReply.tasks.length > 0) {
+                showAISchedule(botReply.tasks); // показываем задачи
+                importBtn.style.display = "block"; // кнопка нужна
+            } else {
+                aiScheduleContainer.textContent = botReply.text; // просто текст
+                importBtn.style.display = "none"; // кнопка не нужна
+            }
+        }
+
+
         function formatAIText(text) {
             return text
                 // Жирный текст: **текст** → <strong>текст</strong>

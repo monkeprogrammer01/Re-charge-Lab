@@ -5,11 +5,15 @@
 
 {% endblock %}
 
+{% block extra_js %}
+    <script src="{% static 'main/js/calendar.js' %}"></script>
+{% endblock %}
 {% block content %}
     <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-    <main>
+    <main class="calendar-page">
         {% include 'main/calendar_modal.html' %}
+
         <div class="layout">
             <section class="card" id="calendar-card">
 
@@ -88,8 +92,5 @@
 
 {% endblock %}
 
-{% block extra_js %}
-    <script src="{% static 'main/js/calendar.js' %}"></script>
-    <script src="{% static 'users/js/auth.js' %}"></script>
-{% endblock %}
+
 

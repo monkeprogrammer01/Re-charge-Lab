@@ -27,6 +27,23 @@ class AIService:
         3. Suggest a small action or challenge to improve their mood
         4. Always give a complete answer
         5. Include a short "Mood: ..., Reason: ..." for database storage
+        
+        When user asks to create a schedule for today, you must ALWAYS return a JSON array of tasks.
+        Each task is an object with:
+        - description (string)
+        - time (HH:MM)
+        - status (todo, in_progress, completed)
+        
+        Example output:
+        {
+          "type": "schedule",
+          "tasks": [
+            {"description": "Завтрак", "time": "08:00", "status": "todo"},
+            {"description": "Прогулка", "time": "09:30", "status": "todo"}
+          ]
+        }
+        
+        Do not return any text except this JSON when generating a schedule.        
         """
 
     # ===== Функции =====
@@ -75,6 +92,17 @@ class AIService:
         report = Message.objects.filter(user_id=user_id, date=since_date).all()
         return report
 
+    def extract_user_text(self, bot_reply: str) -> str:
+        lines = bot_reply.splitlines()
+        user_lines = []
+        skip_prefixes = ["**Mood:**", "**Reason:**", "**Mood: neutral, Reason:"]  # всё служебное
+
+        for line in lines:
+            if any(line.startswith(prefix) for prefix in skip_prefixes):
+                continue
+            user_lines.append(line)
+
+        return "\n".join([l for l in user_lines if l.strip()])
     def chat(self, user_id):
 
         while True:

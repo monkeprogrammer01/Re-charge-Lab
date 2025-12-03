@@ -66,11 +66,13 @@ def get_tasks(request):
     date_str = request.GET.get("date")  # "YYYY-MM-DD"
 
     tasks_qs = Task.objects.filter(user=user, start_date__date=date_str)
+
     tasks_list = [
         {
             "id": t.id,
             "description": t.description,
             "status": t.status,
+            "time": timezone.localtime(t.start_date).strftime("%H:%M"),
             "due_date": t.due_date.isoformat() if t.due_date else None,
         }
         for t in tasks_qs
@@ -118,15 +120,16 @@ def send_message(request):
         if not session:
             session = ChatSession.create_new_session(request.user)
         bot_reply = ai.generate_response(user_id, user_message)
+        clean_text = ai.extract_user_text(bot_reply)
         mood, reason, language = ai.extract_mood_and_reason(bot_reply)
         msg = ai.save_message(user=request.user, user_message=user_message,session=session, date=datetime.now(), mood=mood, reason=reason,
                               language=language, bot_response=bot_reply)
 
         return JsonResponse({
             "user_message": user_message,
-            "bot_reply": bot_reply,
-            "mood": mood,
-            "reason": reason,
+            "bot_reply": clean_text,
+            # "mood": mood,
+            # "reason": reason,
             "language": language,
             "timestamp": msg.created_at
 
@@ -139,17 +142,17 @@ def chat_history(request):
         session = ChatSession.objects.create(user=request.user)
     messages = Message.objects.filter(user=request.user, session=session).order_by(
         "created_at")
+
     data = [{
         "user_text": msg.user_message,
-        "bot_response": msg.bot_response,
-        "mood": msg.mood,
-        "reason": msg.reason,
+        "bot_response": ai.extract_user_text(msg.bot_response),
+        # "mood": msg.mood,
+        # "reason": msg.reason,
         "created_at": msg.created_at.strftime("%Y-%m-%d %H:%M")
 
     }
         for msg in messages
     ]
-    print(data)
     return JsonResponse({
         "messages": data
     })
