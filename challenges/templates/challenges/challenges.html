@@ -8,6 +8,8 @@
 {% endblock %}
 {% block content %}
     <main class="ch-layout">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
         <section class="ch-sidebar">
             <div class="ch-card ch-summary">
                 <h2 class="ch-title">Your challenge stats</h2>
@@ -69,12 +71,14 @@
 
             <div class="ch-list" id="challenge-list">
                 {% for challenge in challenges %}
-                    <article class="challenge-card" data-difficulty="easy" data-status="not-started">
+                    <article class="challenge-card"
+                             data-difficulty="{{ challenge.difficulty }}"
+                             data-status="{% if challenge.id in completed_ids %}done{% else %}not-started{% endif %}"
+                             data-challenge-id="{{ challenge.id }}">
                         <div class="ch-cell ch-cell-name">
                             <h3 class="challenge-title">{{ challenge.title }}</h3>
                             <p class="challenge-desc">{{ challenge.description }}</p>
                             <div class="ch-tags">
-                                <span class="ch-tag">{{ challenge.topic }}</span>
                                 <span class="ch-tag">{{ challenge.topic }}</span>
                             </div>
                         </div>
@@ -91,16 +95,27 @@
                                 <div class="ch-points">30 pts</div>
                             {% endif %}
                         </div>
+
                         <div class="ch-cell ch-cell-status">
-                            <span class="ch-status-badge ch-status-not-started">{{ challenge.status }}</span>
+                            {% if challenge.id in completed_ids %}
+                                <span class="ch-status-badge ch-status-completed">Completed</span>
+                            {% else %}
+                                <span class="ch-status-badge ch-status-not-started">Not started</span>
+                            {% endif %}
                         </div>
+
                         <div class="ch-cell ch-cell-progress">
                             <div class="ch-progress">
-                                <div class="ch-progress-bar" style="width: 0%;"></div>
+                                <div class="ch-progress-bar {% if challenge.id in completed_ids %}ch-progress-completed{% endif %}"
+                                     style="width: {% if challenge.id in completed_ids %}100%{% else %}0%{% endif %};">
+                                </div>
                             </div>
                         </div>
+
                         <div class="ch-cell ch-cell-action">
-                            <button class="ch-secondary-btn status-toggle">Start</button>
+                            <button class="ch-secondary-btn status-toggle">
+                                {% if challenge.id in completed_ids %}Again{% else %}Start{% endif %}
+                            </button>
                         </div>
                     </article>
 

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const visibleCards = cards.filter(c => !c.classList.contains("ch-hidden"));
         const total = visibleCards.length;
         const progress = visibleCards.filter(c => c.dataset.status === "in-progress").length;
-        const completed = visibleCards.filter(c => c.dataset.status === "completed").length;
+        const completed = visibleCards.filter(c => c.dataset.status === "done").length;
         totalEl.textContent = total;
         progressEl.textContent = progress;
         completedEl.textContent = completed;
@@ -37,6 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
         updateStats();
     }
 
+    function getCSRFToken() {
+        return document.querySelector("input[name='csrfmiddlewaretoken']").value;
+    }
+
     async function updateChallengeStatus(challengeId, status) {
         try {
             const response = await fetch(`/challenges/${challengeId}/complete/`, {
@@ -45,12 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     'X-CSRFToken': getCSRFToken(),
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ status: status })
+                body: JSON.stringify({status: status})
             });
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
+            if (!response.ok) throw new Error('Network response was not ok');
 
             const data = await response.json();
             return data;
@@ -58,10 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error updating challenge status:', error);
             throw error;
         }
-    }
-
-    function getCSRFToken() {
-        return document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
 
     filterButtons.forEach(btn => {
@@ -83,49 +81,56 @@ document.addEventListener("DOMContentLoaded", function () {
         const bar = card.querySelector(".ch-progress-bar");
 
         let newStatus = card.dataset.status;
-        let newBadgeText = "";
-        let newBadgeClass = "";
-        let newButtonText = "";
-        let newProgressWidth = "";
+        let badgeText = "";
+        let badgeClass = "";
+        let buttonText = "";
+        let progressWidth = "";
+
+        // Переводим статусы на бэкенд
+        let serverStatus = "";
 
         if (newStatus === "not-started") {
             newStatus = "in-progress";
-            newBadgeText = "In progress";
-            newBadgeClass = "ch-status-badge ch-status-in-progress";
-            newButtonText = "Mark done";
-            newProgressWidth = "60%";
+            serverStatus = "in-progress";
+            badgeText = "In progress";
+            badgeClass = "ch-status-badge ch-status-in-progress";
+            buttonText = "Mark done";
+            progressWidth = "60%";
+            bar.classList.remove("ch-progress-completed");
         } else if (newStatus === "in-progress") {
-            newStatus = "completed";
-            newBadgeText = "Completed";
-            newBadgeClass = "ch-status-badge ch-status-completed";
-            newButtonText = "Again";
-            newProgressWidth = "100%";
+            newStatus = "done";
+            serverStatus = "done";
+            badgeText = "Completed";
+            badgeClass = "ch-status-badge ch-status-completed";
+            buttonText = "Again";
+            progressWidth = "100%";
             bar.classList.add("ch-progress-completed");
-        } else {
+        } else { // done -> not-started
             newStatus = "not-started";
-            newBadgeText = "Not started";
-            newBadgeClass = "ch-status-badge ch-status-not-started";
-            newButtonText = "Start";
-            newProgressWidth = "0%";
+            serverStatus = "not-started";
+            badgeText = "Not started";
+            badgeClass = "ch-status-badge ch-status-not-started";
+            buttonText = "Start";
+            progressWidth = "0%";
             bar.classList.remove("ch-progress-completed");
         }
 
         try {
-            await updateChallengeStatus(challengeId, newStatus);
+            await updateChallengeStatus(challengeId, serverStatus);
 
-            badge.textContent = newBadgeText;
-            badge.className = newBadgeClass;
-            e.target.textContent = newButtonText;
-            bar.style.width = newProgressWidth;
+            // Обновляем UI
+            badge.textContent = badgeText;
+            badge.className = badgeClass;
+            e.target.textContent = buttonText;
+            bar.style.width = progressWidth;
             card.dataset.status = newStatus;
 
             updateStats();
-
         } catch (error) {
             alert('Failed to update challenge status. Please try again.');
-            console.error('Status update failed:', error);
         }
     });
 
+    // Инициализация фильтра и статистики
     applyFilter();
 });
